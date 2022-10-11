@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["linux-arm64-openssl-1.1.x"]
 }
 
 datasource db {
@@ -16,4 +17,49 @@ model User {
   password String
 
   @@map("users")
+}
+
+model Submission {
+  id        String              @id
+  status    SubmissionStatus
+  language  ProgrammingLanguage
+  createdAt DateTime            @default(now())
+  logs      Log[]
+
+  @@map("submissions")
+}
+
+model Log {
+  id         String     @id @default(uuid())
+  content    String
+  type       LogType
+  status     LogStatus
+  submission Submission @relation(fields: [submissionId], references: [id])
+  createdAt  DateTime   @default(now())
+
+  submissionId String
+
+  @@map("logs")
+}
+
+enum LogType {
+  STANDARD
+  ERROR
+}
+
+enum SubmissionStatus {
+  BUILDING
+  RUNNING
+  FAILED
+  PASSED
+}
+
+enum LogStatus {
+  BUILDING
+  RUNNING
+}
+
+enum ProgrammingLanguage {
+  C
+  CPP
 }

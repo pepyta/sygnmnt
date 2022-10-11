@@ -5,6 +5,7 @@ const handleErrors = (handler: NextApiHandler) => {
         try {
             return await handler(req, res);
         } catch(e) {
+            console.error(e);
             res.status(400);
             res.json({
                 message: e.message,
