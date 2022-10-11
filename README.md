@@ -33,7 +33,7 @@ JWT_SECRET_KEY="supersecret123"
 ### Generate database
 After you've set up the `.env` file, you can generate the databse by running the following command:
 ```
-npx prisma generate
+npx prisma db push
 ```
 
 ## Usage
