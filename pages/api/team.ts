@@ -1,6 +1,7 @@
 import { Authentication } from "@lib/server/auth";
 import { MethodNotImplementedError, UnauthorizedError, UnsupportedMethodError } from "@lib/server/errors";
 import { middleware } from "@lib/server/middleware";
+import prisma from "@lib/server/prisma";
 import { NextApiRequest } from "next";
 
 /**
@@ -10,8 +11,16 @@ import { NextApiRequest } from "next";
     const user = await Authentication.getUser(req);
     if(!user) throw new UnauthorizedError();
 
-    // TODO: Implement this method.
-    throw new MethodNotImplementedError();
+    const memberships = await prisma.membership.findMany({
+        where: {
+            userId: user.id,
+        },
+        include: {
+            team: true,
+        },
+    });
+
+    return memberships.map((membership) => membership.team);
 };
 
 /**
