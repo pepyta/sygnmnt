@@ -29,9 +29,34 @@ import { NextApiRequest } from "next";
 const create = async (req: NextApiRequest) => {
     const user = await Authentication.getUser(req);
     if(!user) throw new UnauthorizedError();
-    
-    // TODO: Implement this method.
-    throw new MethodNotImplementedError();
+
+    const name: string = JSON.parse(req.body).name;
+    if(!name || name.length === 0) {
+        throw new Error("A team's name must be at least one character long!");
+    }
+
+    const membership = await prisma.membership.create({
+        data: {
+            user: {
+                connect: {
+                    id: user.id,
+                },
+            },
+            team: {
+                create: {
+                    name,
+                },
+            },
+            role: "OWNER",
+        },
+        include: {
+            team: true,
+        },
+    });
+
+    return {
+        team: membership.team,
+    };
 };
 
 /**

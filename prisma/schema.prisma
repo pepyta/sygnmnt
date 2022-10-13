@@ -30,6 +30,7 @@ model Team {
 model Membership {
   team Team @relation(fields: [teamId], references: [id])
   user User @relation(fields: [userId], references: [id])
+  role Role
 
   teamId String
   userId String
