@@ -25,8 +25,10 @@ const create = async (req: NextApiRequest) => {
     throw new MethodNotImplementedError();
 };
 
-
-const handler = async (req: NextApiRequest) => {
+/**
+ * This is the controller for the Team resources.
+ */
+const controller = async (req: NextApiRequest) => {
     if(req.method === "GET") {
         return await getAll(req);
     } else if(req.method === "POST") {
@@ -36,4 +38,4 @@ const handler = async (req: NextApiRequest) => {
     }
 };
 
-export default middleware(handler);
+export default middleware(controller);
