@@ -1,5 +1,7 @@
+import TeamCreateButton from "@components/TeamCreateButton";
+import TeamList from "@components/TeamList";
 import { useAuth, useUser } from "@components/UserProvider";
-import { Container, Link } from "@mui/material";
+import { Card, CardContent, Container, Link, Typography } from "@mui/material";
 import NextLink from "next/link";
 
 const HomePage = () => {
@@ -25,6 +27,24 @@ const HomePage = () => {
                 href={"#"}
                 onClick={handleLogout}
             >Logout</Link>
+
+            <Card>
+                <CardContent sx={{ pb: 0 }}>
+                    <Typography variant={"h5"} gutterBottom>
+                        Teams
+                    </Typography>
+                </CardContent>
+                <TeamList />
+            </Card>
+            <TeamCreateButton
+                color={"primary"}
+                sx={{
+                    position: "fixed",
+                    bottom: 0,
+                    right: 0,
+                    m: 4,
+                }}
+            />
         </Container>
     );
 };

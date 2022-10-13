@@ -5,12 +5,13 @@ import prisma from "@lib/server/prisma";
 import { NextApiRequest } from "next";
 
 /**
- * Gets a user's teams.
+ * Gets all teams, that the user has membership in.
  */
  const getAll = async (req: NextApiRequest) => {
     const user = await Authentication.getUser(req);
     if(!user) throw new UnauthorizedError();
 
+    // get all memberships of the given user
     const memberships = await prisma.membership.findMany({
         where: {
             userId: user.id,
@@ -20,7 +21,12 @@ import { NextApiRequest } from "next";
         },
     });
 
-    return memberships.map((membership) => membership.team);
+    // return only the team objects, exclude additional informations from membership
+    const teams = memberships.map((membership) => membership.team);
+
+    return {
+        teams,
+    };
 };
 
 /**
@@ -55,6 +61,7 @@ const create = async (req: NextApiRequest) => {
     });
 
     return {
+        message: "Team created successfully!",
         team: membership.team,
     };
 };
