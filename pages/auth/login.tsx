@@ -1,6 +1,7 @@
-import { useAuth } from "@components/UserProvider";
+import { useUser, useAuth } from "@components/UserProvider";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Card, CardContent, Container, Grid, TextField, Typography } from "@mui/material";
+import NextLink from "next/link";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
@@ -13,6 +14,16 @@ const LoginPage = () => {
     const router = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const Authentication = useAuth();
+
+    const { user } = useUser();
+
+    if(user){
+        return (
+            <Container maxWidth={"sm"}>
+                You are already logged in! <NextLink href={"/"}>Jump to homepage!</NextLink>
+            </Container>
+        );
+    }
 
     const login = async () => {
         try {
