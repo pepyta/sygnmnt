@@ -78,7 +78,7 @@ const TeamPage = ({ id }: TeamPageProps) => {
     if(isLoading) {
         return (
             <Typography>
-                Loading team's data...
+                {"Loading team's data..."}
             </Typography>
         );
     }
