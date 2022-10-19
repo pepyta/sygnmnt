@@ -32,6 +32,28 @@ const Team = {
         };
     },
 
+    update: async (teamId: string, name: string) => {
+        type ResponseType = {
+            message: string;
+            team: GetTeamByIdResponseType;
+        };
+
+        const { team, message }: ResponseType = await RootApiHandler.fetch(`/api/team/${teamId}`, {
+            method: "PATCH",
+            body: JSON.stringify({
+                name,
+            }),
+            headers: {
+                "Authorization": `Bearer ${Authentication.getAccessToken()}`,
+            },
+        });
+
+        return {
+            team,
+            message,
+        };
+    },
+
     create: async (name: string) => {
         type ResponseType = {
             team: PrismaTeam;
