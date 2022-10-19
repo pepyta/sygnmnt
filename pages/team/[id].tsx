@@ -19,15 +19,6 @@ export type TeamProps = {
 
 const TeamPage = ({ id }: TeamPageProps) => {
     const { user } = useUser();
-    
-    if (!user) {
-        return (
-            <Container maxWidth={"sm"}>
-                You are not logged in! <NextLink href={"/auth/login"}>Log in!</NextLink>
-            </Container>
-        );
-    }
-    
     const [isLoading, setLoading] = useState(true);
     const [error, setError] = useState<Error>();
     //const [team, setTeam] = useState<TeamProps>();
@@ -50,6 +41,14 @@ const TeamPage = ({ id }: TeamPageProps) => {
     useEffect(() => {
         load();
     }, []);
+    
+    if (!user) {
+        return (
+            <Container maxWidth={"sm"}>
+                You are not logged in! <NextLink href={"/auth/login"}>Log in!</NextLink>
+            </Container>
+        );
+    }
     
     if(error) {
         return (
