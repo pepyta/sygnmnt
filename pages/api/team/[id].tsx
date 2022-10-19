@@ -1,5 +1,5 @@
 import { Authentication } from "@lib/server/auth";
-import { MethodNotImplementedError, UnauthorizedError, UnsupportedMethodError } from "@lib/server/errors";
+import { UnauthorizedError, UnsupportedMethodError } from "@lib/server/errors";
 import { middleware } from "@lib/server/middleware";
 import prisma from "@lib/server/prisma";
 import { NextApiRequest } from "next";
@@ -26,8 +26,16 @@ const getTeamById = async (req: NextApiRequest): Promise<GetTeamByIdResponseType
             teamId: id,
         },
         include: {
-            team: true,
-        }
+            team: {
+                include: {
+                    memberships: {
+                        include: {
+                            user: true,
+                        },
+                    },
+                },
+            },
+        },
     });
     
     if(!membership) {
@@ -37,7 +45,11 @@ const getTeamById = async (req: NextApiRequest): Promise<GetTeamByIdResponseType
     return {
         name: membership.team.name,
         role: membership.role,
-        members: [],
+        members: membership.team.memberships.map((membership) => ({
+            id: membership.user.id,
+            username: membership.user.username,
+            role: membership.role,
+        })),
     };
 };
 

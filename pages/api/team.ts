@@ -8,7 +8,13 @@ import { NextApiRequest } from "next";
 export type TeamType = {
     name: string;
     role: Role;
-    members: string[];
+    members: TeamMemberType[];
+};
+
+export type TeamMemberType = {
+    id: string;
+    username: string;
+    role: Role;
 };
 
 /**
