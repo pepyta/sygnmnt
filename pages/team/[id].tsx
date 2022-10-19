@@ -1,11 +1,10 @@
-import Team from "@lib/client/team";
-import { Avatar, Container, Grid, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListProps, Typography } from "@mui/material";
 import { useUser } from "@components/UserProvider";
+import Team from "@lib/client/team";
+import { useMount } from "@lib/client/useMount";
 import { LoadingButton } from "@mui/lab";
-import { User as PrismaMember } from "@prisma/client";
-import { Team as PrismaTeam } from "@prisma/client";
+import { Container, Grid, Typography } from "@mui/material";
 import NextLink from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export type TeamPageProps = {
     id: string;
@@ -38,9 +37,9 @@ const TeamPage = ({ id }: TeamPageProps) => {
         }
     };
     
-    useEffect(() => {
+    useMount(() => {
         load();
-    }, []);
+    });
     
     if (!user) {
         return (
@@ -49,7 +48,7 @@ const TeamPage = ({ id }: TeamPageProps) => {
             </Container>
         );
     }
-    
+
     if(error) {
         return (
             <Grid container spacing={2}>

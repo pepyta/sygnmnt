@@ -1,7 +1,8 @@
 import { User } from "@prisma/client";
-import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
+import { createContext, PropsWithChildren, useContext, useState } from "react";
 import decode from "jwt-decode";
 import Authentication from "@lib/client/auth";
+import { useMount } from "@lib/client/useMount";
 
 export type UserProviderProps = PropsWithChildren<{}>;
 
@@ -47,7 +48,7 @@ const UserProvider = (props: UserProviderProps) => {
     const [isLoading, setLoading] = useState(true);
     const [user, setUser] = useState<User>();
     
-    useEffect(() => {
+    useMount(() => {
         const accessToken = localStorage.getItem("access_token");
         
         if(accessToken) {
@@ -55,7 +56,7 @@ const UserProvider = (props: UserProviderProps) => {
         }
 
         setLoading(false);
-    }, []);
+    });
     
     if(isLoading) {
         return (
