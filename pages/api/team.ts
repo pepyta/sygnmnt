@@ -2,7 +2,14 @@ import { Authentication } from "@lib/server/auth";
 import { MethodNotImplementedError, UnauthorizedError, UnsupportedMethodError } from "@lib/server/errors";
 import { middleware } from "@lib/server/middleware";
 import prisma from "@lib/server/prisma";
+import { Role } from "@prisma/client";
 import { NextApiRequest } from "next";
+
+export type TeamType = {
+    name: string;
+    role: Role;
+    members: string[];
+};
 
 /**
  * Gets all teams, that the user has membership in.

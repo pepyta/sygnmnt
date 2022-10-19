@@ -1,32 +1,18 @@
+import { GetTeamByIdResponseType } from "@pages/api/team/[id]";
 import { Team as PrismaTeam } from "@prisma/client";
-import { Role as PrismaRole } from "@prisma/client";
 import Authentication from "./auth";
 import RootApiHandler from "./fetch";
 
 const Team = {
-    
     getByID: async (id: string) => {
-        type ResponseType = {
-            name: string;
-            role: PrismaRole;
-            members: string[];
-        };
-        
-        const { name, role, members }: ResponseType = await RootApiHandler.fetch("/api/getTeam", {
-            method: "POST",
-            body: JSON.stringify({
-                id,
-            }),
+        const resp: GetTeamByIdResponseType = await RootApiHandler.fetch(`/api/team/${id}`, {
+            method: "GET",
             headers: {
                 "Authorization": `Bearer ${Authentication.getAccessToken()}`,
             },
         });
         
-        return {
-            name,
-            role,
-            members,
-        };
+        return resp;
     },
     
     getAll: async () => {

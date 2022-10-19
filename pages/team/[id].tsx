@@ -3,6 +3,7 @@ import Team from "@lib/client/team";
 import { useMount } from "@lib/client/useMount";
 import { LoadingButton } from "@mui/lab";
 import { Container, Grid, Typography } from "@mui/material";
+import { TeamType } from "@pages/api/team";
 import { Role } from "@prisma/client";
 import NextLink from "next/link";
 import { useState } from "react";
@@ -11,25 +12,18 @@ export type TeamPageProps = {
     id: string;
 };
 
-export type TeamProps = {
-    name: string;
-    role: Role;
-    members: string[];
-}
-
 const TeamPage = ({ id }: TeamPageProps) => {
     const { user } = useUser();
     const [isLoading, setLoading] = useState(true);
     const [error, setError] = useState<Error>();
-    //const [team, setTeam] = useState<TeamProps>();
-    const [teamData, setTeamData] = useState<TeamProps>();
+    const [team, setTeam] = useState<TeamType>();
     
     const load = async () => {
         setLoading(true);
 
         try {
             const { name, role, members } = await Team.getByID(id);
-            setTeamData({name, role, members});
+            setTeam({name, role, members});
             setError(null);
         } catch(e) {
             setError(e);
@@ -86,7 +80,7 @@ const TeamPage = ({ id }: TeamPageProps) => {
     
     return (
         <Container maxWidth={"sm"}>
-            This is the team page for {teamData["name"]} (your role is {teamData["role"]}).
+            This is the team page for {team["name"]} (your role is {team["role"]}).
         </Container>
     );
 };
