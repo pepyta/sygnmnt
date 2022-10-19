@@ -3,6 +3,7 @@ import Team from "@lib/client/team";
 import { useMount } from "@lib/client/useMount";
 import { LoadingButton } from "@mui/lab";
 import { Container, Grid, Typography } from "@mui/material";
+import { Role } from "@prisma/client";
 import NextLink from "next/link";
 import { useState } from "react";
 
@@ -12,7 +13,7 @@ export type TeamPageProps = {
 
 export type TeamProps = {
     name: string;
-    role: string;
+    role: Role;
     members: string[];
 }
 
