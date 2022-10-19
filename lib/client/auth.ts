@@ -44,6 +44,20 @@ const Authentication = {
     logout: () => {
         localStorage.removeItem("access_token");
     },
+    createTeam: async (teamName: String) => {
+        type ResponseType = {
+            message: string;
+        };
+        const { message } = await RootApiHandler.fetch<ResponseType>("index", {
+            method: "POST",
+            body: JSON.stringify({
+                teamName,
+            }),
+        });
+        return {
+            message,
+        };
+    }
 };
 
 export default Authentication;
