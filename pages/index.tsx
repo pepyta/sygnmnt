@@ -17,7 +17,20 @@ const HomePage = () => {
     if (!user) {
         return (
             <Container maxWidth={"sm"}>
-                You are not logged in! <NextLink href={"/auth/login"}>Log in!</NextLink>
+                <Card>
+                    <CardContent>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <Typography variant={"h5"}>
+                                    You are not logged in!
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <NextLink href={"/auth/login"}>Log in!</NextLink>
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </Card>
             </Container>
         );
     }

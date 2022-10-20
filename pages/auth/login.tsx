@@ -20,7 +20,20 @@ const LoginPage = () => {
     if(user){
         return (
             <Container maxWidth={"sm"}>
-                You are already logged in! <NextLink href={"/"}>Jump to homepage!</NextLink>
+                <Card>
+                    <CardContent>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <Typography variant={"h5"}>
+                                    You are already logged in!
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <NextLink href={"/"}>Jump to home page</NextLink>
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </Card>
             </Container>
         );
     }
