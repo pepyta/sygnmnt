@@ -13,9 +13,9 @@ const getTeamById = async (req: NextApiRequest): Promise<GetTeamByIdResponseType
     if(!user) throw new UnauthorizedError();
     
     const id = req.query.id as string;
-    if(!id || id.length !== 36) {
-        // TODO: Use regex to determinate if the given ID is a UUID as this feels hacky.
-        throw new Error("A team's ID must be exactly 36 characters long!");
+    const UUIDregex = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/g
+    if(!id || !UUIDregex.test(id)) {
+        throw new Error("The team's ID is invalid.");
     }
     
     const membership = await prisma.membership.findFirst({
@@ -55,9 +55,9 @@ const updateTeamById = async (req: NextApiRequest) => {
     
     const id = req.query.id as string;
     const { name } = JSON.parse(req.body);
-    if(!id || id.length !== 36) {
-        // TODO: Use regex to determinate if the given ID is a UUID as this feels hacky.
-        throw new Error("A team's ID must be exactly 36 characters long!");
+    const UUIDregex = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/g
+    if(!id || !UUIDregex.test(id)) {
+        throw new Error("The team's ID is invalid");
     }
     if(!name || name.length === 0) {
         throw new Error("A team's name must be at least 1 character long!");
