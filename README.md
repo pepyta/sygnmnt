@@ -1,13 +1,46 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# SYGNMNT
+
+The SYGNMNT project is an assignment management website, where the teachers can create coding tasks for students with automated tests.
+
+The project is part of the Tools of Software Projects (IP-18KVPRJG) assignment.
+
+## Prerequisites
+- [NodeJS LTS](https://nodejs.org/en/)
+- MySQL Server (e.g: XAMPP)
 
 ## Getting Started
+### Install dependencies
+You can install the required dependencies by running the following command:
+```
+npm install
+```
 
-First, run the development server:
+### Set up environmental file
+You will need to create a `.env` file to use this project.
 
+First, you will need to set up the databse connection url like this:
+```dotenv
+DATABASE_URL="mysql://username:password@host:port/database"
+```
+
+If you've installed XAMPP, then you can use the root username like this: `mysql://root:@localhost:3306/sygnmnt`
+
+Generate a random string as your JWT secret key. This will be used to handle 
+```dotenv
+JWT_SECRET_KEY="supersecret123"
+```
+
+### Generate database
+After you've set up the `.env` file, you can generate the databse by running the following command:
+```
+npx prisma db push
+```
+
+## Usage
+### Running in development mode
+Run the development server:
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -18,17 +51,22 @@ You can start editing the page by modifying `pages/index.js`. The page auto-upda
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
-## Learn More
+## Building
+You can build your project by running the following command:
+```
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
+This will create a `.next` in the project folder. This will contain every asset that you will need to run the application.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Hosting
+After you've built the project, you can start the server in production mode via this command:
+```
+npm run start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+This will start the server on the `3000` port, which you can edit by starting the project like this:
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```
+npx next start -p 3001
+```
