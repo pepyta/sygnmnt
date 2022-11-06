@@ -5,7 +5,7 @@ import * as jsonwebtoken from "jsonwebtoken";
 export const Authentication = {
     getUser: (req: NextApiRequest): User => {
         // Bearer eyAscxeb....
-        const authorizationKey = req.headers.authorization;
+        const authorizationKey = req.headers.authorization || req.headers.Authorization as string;
         if(!authorizationKey) return null;
 
         // eyAscxeb....

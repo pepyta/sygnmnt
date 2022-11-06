@@ -23,6 +23,22 @@ const Authentication = {
         };
     },
 
+    /**
+     * Gets the access token that is stored on the local machine.
+     * @returns The access token as a JWT token.
+     */
+    getAccessToken: () => {
+        return localStorage.getItem("access_token");
+    },
+
+    /**
+     * Checks if the user is logged in.
+     * @returns true if the user is authenticated
+     */
+    isLoggedIn: () => {
+        return !!Authentication.getAccessToken();
+    },
+
     register: async (username: string, password: string) => {
         type ResponseType = {
             message: string;
