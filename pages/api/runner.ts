@@ -1,6 +1,6 @@
 import { UnsupportedMethodError } from "@lib/server/errors";
 import { middleware } from "@lib/server/middleware";
-import Runner from "@lib/server/runner/runner";
+import Runner from "@lib/server/runner";
 import { NextApiRequest } from "next";
 
 const handler = async (req: NextApiRequest) => {

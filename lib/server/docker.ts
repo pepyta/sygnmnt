@@ -1,7 +1,7 @@
-import { File } from "@prisma/client";
+import { RunnerFile } from "./runner";
 
 export default class DockerFile {
-    public static generateC(files: File[]) {
+    public static generateC(files: RunnerFile[]) {
         return `
             FROM alpine:3.14
             RUN apk add build-base
@@ -11,7 +11,7 @@ export default class DockerFile {
         `;
     }
 
-    public static generateCpp(files: File[]) {
+    public static generateCpp(files: RunnerFile[]) {
         return `
             FROM alpine:3.14
             RUN apk add build-base

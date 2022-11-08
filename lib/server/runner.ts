@@ -2,13 +2,17 @@ import { randomUUID } from "crypto";
 import fs from "fs/promises";
 import fsSync from "fs";
 import { spawn } from "child_process";
-import DockerFile from "../docker";
-import { File } from "../file";
+import DockerFile from "./docker";
 import { ProgrammingLanguage } from "@prisma/client";
 
 type LogHooks = {
     onError?: (error: string) => void;
     onLog?: (message: string) => void;
+};
+
+export type RunnerFile = {
+    name: string;
+    content: string;
 };
 
 export class BuildError extends Error {
@@ -42,7 +46,7 @@ export default class Runner {
         return `sygnmnt-runner-${this.id}`;
     }
 
-    constructor(private files: File[], private programmingLanguage: ProgrammingLanguage) {
+    constructor(private files: RunnerFile[], private programmingLanguage: ProgrammingLanguage) {
         this.id = randomUUID();
     }
 

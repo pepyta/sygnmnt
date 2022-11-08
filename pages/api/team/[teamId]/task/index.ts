@@ -41,10 +41,7 @@ const getTasks = async (req: NextApiRequest) => {
     const teamId = req.query.id as string;
     const membership = await Membership.getByTeamId(user, teamId);
 
-    // only owners and auxiliaries can create new task
-    if(membership.role !== "OWNER" && membership.role !== "AUXILIARY") {
-        throw new ForbiddenError();
-    }
+    return Task.getAll(membership.team);
 };
 
 const controller = async (req: NextApiRequest) => {
