@@ -4,6 +4,12 @@ export class UnauthorizedError extends Error {
     }
 }
 
+export class ForbiddenError extends Error {
+    constructor() {
+        super("You don't have permission for this!");
+    }
+}
+
 export class UnsupportedMethodError extends Error {
     constructor() {
         super("Unsupported method");

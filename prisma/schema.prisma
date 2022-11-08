@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["linux-arm64-openssl-1.1.x"]
 }
 
@@ -16,20 +16,12 @@ model User {
   username    String       @unique
   password    String
   memberships Membership[]
+  submissions Submission[]
 
   @@map("users")
 }
 
-model Submission {
-  id        String              @id
-  status    SubmissionStatus
-  language  ProgrammingLanguage
-  createdAt DateTime            @default(now())
-  logs      Log[]
-
-  @@map("submissions")
-}
-
+// Logs of a submission's run are stored here
 model Log {
   id         String     @id @default(uuid())
   content    String
@@ -43,15 +35,58 @@ model Log {
   @@map("logs")
 }
 
-enum LogType {
-  STANDARD
-  ERROR
+// A task can be created by an owner or an auxillary
+model Task {
+  id          String              @id @default(uuid())
+  name        String
+  description String
+  language    ProgrammingLanguage
+  submissions Submission[]
+  team        Team                @relation(fields: [teamId], references: [id])
+  files       File[]
+  createdAt   DateTime            @default(now())
+  dueAt       DateTime?
+
+  teamId String
+
+  @@map("tasks")
+}
+
+// A single submission to a task by a user
+// A user can submit multiple solution to a task
+model Submission {
+  id        String           @id
+  status    SubmissionStatus
+  task      Task             @relation(fields: [taskId], references: [id])
+  user      User             @relation(fields: [userId], references: [id])
+  files     File[]
+  logs      Log[]
+  createdAt DateTime         @default(now())
+
+  taskId String
+  userId String
+
+  @@map("submissions")
+}
+
+// Files are stored as plain text in the database to make things easier
+model File {
+  id           String      @default(uuid())
+  name         String      @unique
+  content      String      @db.LongText()
+  Task         Task?       @relation(fields: [taskId], references: [id])
+  taskId       String?
+  Submission   Submission? @relation(fields: [submissionId], references: [id])
+  submissionId String?
+
+  @@map("files")
 }
 
 model Team {
   id          String       @id @default(uuid())
   name        String
   memberships Membership[]
+  tasks       Task[]
 
   @@map("teams")
 }
@@ -89,4 +124,9 @@ enum LogStatus {
 enum ProgrammingLanguage {
   C
   CPP
+}
+
+enum LogType {
+  STANDARD
+  ERROR
 }

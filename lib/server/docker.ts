@@ -1,4 +1,4 @@
-import { File } from "./file";
+import { File } from "@prisma/client";
 
 export default class DockerFile {
     public static generateC(files: File[]) {
