@@ -6,6 +6,7 @@ import { Role } from "@prisma/client";
 import { NextApiRequest } from "next";
 
 export type TeamType = {
+    id: string;
     name: string;
     role: Role;
     members: TeamMemberType[];

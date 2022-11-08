@@ -1,6 +1,6 @@
 import { ProgrammingLanguage, Team as PrismaTeam } from "@prisma/client";
 
-export class Task {
+export default class Task {
     /**
      * Creates a new task for a team.
      * @param team The team that we want to create the team for.
@@ -9,7 +9,7 @@ export class Task {
      * @param language The language of the task.
      * @returns A task that has been created.
      */
-    public async create(team: PrismaTeam, name: string, description: string, language: ProgrammingLanguage) {
+    public static async create(team: PrismaTeam, name: string, description: string, language: ProgrammingLanguage) {
         return await prisma.task.create({
             data: {
                 team: {
@@ -29,7 +29,7 @@ export class Task {
      * @param team The team that we want to get the tasks for.
      * @returns An array of tasks.
      */
-    public async getAll(team: PrismaTeam) {
+    public static async getAll(team: PrismaTeam) {
         return await prisma.task.findMany({
             where: {
                 teamId: team.id,
@@ -43,10 +43,3 @@ export class Task {
         });
     }
 }
-
-// Ensure that only one task instance is initialized
-if (!global.Task) {
-    global.Task = new Task();
-}
-
-export default global.Task as Task;

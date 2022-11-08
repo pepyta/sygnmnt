@@ -11,7 +11,7 @@ const createTask = async (req: NextApiRequest) => {
     const user = await Authentication.getUser(req);
 
     // get the team that we want to create the task for
-    const teamId = req.query.id as string;
+    const teamId = req.query.teamId as string;
     const membership = await Membership.getByTeamId(user, teamId);
 
     // only owners and auxiliaries can create new task
@@ -38,8 +38,9 @@ const getTasks = async (req: NextApiRequest) => {
     const user = await Authentication.getUser(req);
 
     // get the team that we want to create the task for
-    const teamId = req.query.id as string;
+    const teamId = req.query.teamId as string;
     const membership = await Membership.getByTeamId(user, teamId);
+    console.log(membership);
 
     return Task.getAll(membership.team);
 };

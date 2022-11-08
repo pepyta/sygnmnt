@@ -13,10 +13,11 @@ const getTeamById = async (req: NextApiRequest): Promise<GetTeamByIdResponseType
     const user = await Authentication.getUser(req);
     if(!user) throw new UnauthorizedError();
     
-    const teamId = req.query.id as string;
+    const teamId = req.query.teamId as string;
     const membership = await Membership.getByTeamId(user, teamId);
     
     return {
+        id: membership.team.id,
         name: membership.team.name,
         role: membership.role,
         members: membership.team.memberships.map((membership) => ({
