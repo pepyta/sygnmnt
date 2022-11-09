@@ -98,6 +98,7 @@ const TeamPage = ({ id }: TeamPageProps) => {
                 </CardContent>
                 <TaskList
                     tasks={tasks}
+                    team={team}
                 />
             </Card>
             <TaskCreateFab

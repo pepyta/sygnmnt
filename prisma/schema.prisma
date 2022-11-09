@@ -57,8 +57,8 @@ model Task {
 // A single submission to a task by a user
 // A user can submit multiple solution to a task
 model Submission {
-  id        String           @id
-  status    SubmissionStatus
+  id        String           @id @default(uuid())
+  status    SubmissionStatus @default(WAITING)
   task      Task             @relation(fields: [taskId], references: [id])
   user      User             @relation(fields: [userId], references: [id])
   files     File[]
@@ -112,6 +112,7 @@ enum Role {
 }
 
 enum SubmissionStatus {
+  WAITING
   BUILDING
   RUNNING
   FAILED

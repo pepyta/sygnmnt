@@ -1,18 +1,19 @@
 import { ListItemButton, ListItemButtonBaseProps, ListItemText } from "@mui/material";
-import { Task } from "@prisma/client";
+import { Task, Team } from "@prisma/client";
 import { useState } from "react";
 import TaskDetailsDialog from "./TaskDetailsDialog";
 
 export type TaskListItemButtonProps = ListItemButtonBaseProps & {
     task: Task;
+    team: Team;
 };
 
-const TaskListItemButton = ({ task, ...props }: TaskListItemButtonProps) => {
+const TaskListItemButton = ({ task, team, ...props }: TaskListItemButtonProps) => {
     const [isOpen, setOpen] = useState(false);
 
     return (
         <>
-            <ListItemButton onClick={() => setOpen(true)}>
+            <ListItemButton onClick={() => setOpen(true)} {...props}>
                 <ListItemText
                     primary={`${task.name}`}
                     secondary={`Created at: ${new Date(task.createdAt).toLocaleDateString()}${task.dueAt ? `, due at: ${new Date(task.dueAt).toLocaleDateString()}` : ""}`}
@@ -21,6 +22,7 @@ const TaskListItemButton = ({ task, ...props }: TaskListItemButtonProps) => {
             <TaskDetailsDialog
                 open={isOpen}
                 onClose={() => setOpen(false)}
+                team={team}
                 task={task}
             />
         </>

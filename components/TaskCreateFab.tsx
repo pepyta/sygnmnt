@@ -19,7 +19,7 @@ const TaskCreateFab = ({ team, onCreate, ...props }: TaskCreateFabProps) => {
                 onClick={() => setOpen(true)}
                 {...props}
             >
-                <AddIcon /> Create a new team
+                <AddIcon /> Create a new task
             </Fab>
             <TaskCreateDialog
                 open={isOpen}
