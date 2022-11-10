@@ -6,6 +6,7 @@ import Submission from "@lib/client/submission";
 import { useMount } from "@lib/client/useMount";
 import { LoadingButton } from "@mui/lab";
 import SubmissionCreateDialog from "./SubmissionCreateDialog";
+import SubmissionListDialog from "./SubmissionListDialog";
 
 export type TaskDetailsDialogProps = DialogProps & {
     task: Task;
@@ -13,78 +14,48 @@ export type TaskDetailsDialogProps = DialogProps & {
 };
 
 const TaskDetailsDialog = ({ task, team, ...props }: TaskDetailsDialogProps) => {
-    const [submissions, setSubmission] = useState<PrismaSubmission[]>([]);
-    const [isOpen, setOpen] = useState(false);
-    const [isLoading, setLoading] = useState(false);
-    const [error, setError] = useState<Error>();
+    const [isCreateOpen, setCreateOpen] = useState(false);
+    const [isListOpen, setListOpen] = useState(false);
 
-    const loadSubmissions = async () => {
-        try {
-            setLoading(true);
-            setSubmission(await Submission.getAll(team.id, task.id));
-            setError(null);
-        } catch (e) {
-            setError(e);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const openSubmission = () => setOpen(true);
-
-    useMount(() => {
-        loadSubmissions();
-    });
+    const openListDialog = () => setListOpen(true);
+    const openCreateDialog = () => setCreateOpen(true);
 
     return (
         <>
             <SubmissionCreateDialog
                 task={task}
                 team={team}
-                open={isOpen}
-                onClose={() => setOpen(false)}
+                open={isCreateOpen}
+                onClose={() => setCreateOpen(false)}
+            />
+            <SubmissionListDialog
+                task={task}
+                team={team}
+                open={isListOpen}
+                onClose={() => setListOpen(false)}
             />
             <Dialog fullWidth maxWidth={"sm"} {...props}>
-                <DialogTitle>
-                    {task.name}
-                </DialogTitle>
                 <DialogContent>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={1}>
+                        <Grid item xs={12}>
+                            <Typography variant={"h6"}>
+                                Task details
+                            </Typography>
+                        </Grid>
                         <Grid item xs={12}>
                             <DialogContentText>
                                 {task.description}
                             </DialogContentText>
                         </Grid>
                         <Grid item xs={12}>
-                            <Button variant="contained" fullWidth onClick={openSubmission}>
+                            <Button variant="contained" fullWidth onClick={openCreateDialog}>
                                 Submit solution
                             </Button>
                         </Grid>
                         <Grid item xs={12}>
-                            {error ? (
-                                <Grid container spacing={1}>
-                                    <Grid item xs={12}>
-                                        <Typography>
-                                            An error happened during the loading of submissions:
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Typography>
-                                            {error.message}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <LoadingButton loading={isLoading} onClick={loadSubmissions}>
-                                            Retry
-                                        </LoadingButton>
-                                    </Grid>
-                                </Grid>
-                            ) : (
-                                <SubmissionList
-                                    sx={{ ml: -3, mr: -3 }}
-                                    submissions={submissions}
-                                />
-                            )}
+                            <Button variant={"outlined"} fullWidth onClick={openListDialog}>
+                                List submissions
+                            </Button>
                         </Grid>
                     </Grid>
                 </DialogContent>
