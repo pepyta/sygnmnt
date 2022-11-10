@@ -3,8 +3,7 @@ import { RunnerFile } from "./runner";
 export default class DockerFile {
     public static generateC(files: RunnerFile[]) {
         return `
-            FROM alpine:3.14
-            RUN apk add build-base
+            FROM gcc:4.9
             ${files.map((file) => `COPY ${file.name} ${file.name}`).join("\n")}
             RUN gcc -o final ${files.map((file) => file.name).join(" ")}
             CMD ["./final"]

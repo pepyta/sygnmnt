@@ -18,4 +18,7 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run build --if-present
+    # install gcc to have it on the disk befor running the tests
+    # this is required because it would time out the runners
+    - run: docker pull gcc:4.9
     - run: npm test
