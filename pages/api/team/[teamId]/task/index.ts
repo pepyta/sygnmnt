@@ -40,7 +40,6 @@ const getTasks = async (req: NextApiRequest) => {
     // get the team that we want to create the task for
     const teamId = req.query.teamId as string;
     const membership = await Membership.getByTeamId(user, teamId);
-    console.log(membership);
 
     return Task.getAll(membership.team);
 };
