@@ -10,6 +10,12 @@ export class ForbiddenError extends Error {
     }
 }
 
+export class UsernameAlreadyTakenError extends Error {
+    constructor() {
+        super()
+    }
+}
+
 export class UnsupportedMethodError extends Error {
     constructor() {
         super("Unsupported method");
