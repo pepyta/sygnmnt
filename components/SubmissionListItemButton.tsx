@@ -58,7 +58,6 @@ const SubmissionListItemButton = ({ submission, ...props }: SubmissionListItemBu
             </ListItemAvatar>
             <ListItemText
                 primary={`Submitted at ${date}`}
-                secondary={submission.status}
             />
         </ListItemButton>
     );
