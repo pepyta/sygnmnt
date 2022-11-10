@@ -73,8 +73,8 @@ model Submission {
 
 // Files are stored as plain text in the database to make things easier
 model File {
-  id           String      @default(uuid())
-  name         String      @unique
+  id           String      @default(uuid()) @id
+  name         String
   content      String      @db.LongText()
   Task         Task?       @relation(fields: [taskId], references: [id])
   taskId       String?

@@ -6,6 +6,9 @@ export default class Submission {
             where: {
                 taskId,
             },
+            orderBy: {
+                createdAt: "desc",
+            },
         });
     }
 
