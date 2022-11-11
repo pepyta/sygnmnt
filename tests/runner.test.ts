@@ -15,15 +15,9 @@ test('test with a successful submission', async () => {
         }
     ], "C");
 
-    await runner.build({
-        onLog: console.log,
-        onError: console.error,
-    });
+    await runner.build();
 
-    const exitCode = await runner.run({
-        onLog: console.log,
-        onError: console.error,
-    });
+    const exitCode = await runner.run();
 
     expect(exitCode).toBe(0);
 });
@@ -53,15 +47,9 @@ test('test submission that fails', async () => {
         }
     ], "C");
 
-    await runner.build({
-        onLog: console.log,
-        onError: console.error,
-    });
+    await runner.build();
 
-    await expect(runner.run({
-        onLog: console.log,
-        onError: console.error,
-    }))
+    await expect(runner.run())
         .rejects
         .toThrow(new RuntimeError(1));
 });
