@@ -5,7 +5,6 @@ const removeImports = require("next-remove-imports")();
 const nextConfig = removeImports({
   reactStrictMode: true,
   swcMinify: true,
-  output: "standalone",
   experimental: { esmExternals: true }
 });
 

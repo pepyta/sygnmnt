@@ -3,7 +3,6 @@
 
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["linux-arm64-openssl-1.1.x"]
   previewFeatures = ["referentialIntegrity"]
 }
 

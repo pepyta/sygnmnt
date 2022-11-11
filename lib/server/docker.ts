@@ -5,7 +5,7 @@ export default class DockerFile {
         return `
             FROM gcc:4.9
             ${files.map((file) => `COPY ${file.name} ${file.name}`).join("\n")}
-            RUN gcc -o final ${files.map((file) => file.name).join(" ")}
+            RUN gcc -std=c99 -o final ${files.map((file) => file.name).join(" ")}
             CMD ["./final"]
         `;
     }
