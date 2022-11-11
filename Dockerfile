@@ -9,10 +9,14 @@ RUN apt-get update
 RUN apt-get install docker.io -y
 RUN apt-get install bash -y
 
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV DATABASE_URL ${DATABASE_URL}
-RUN echo "DATABASE_URL=$DATABASE_URL" >> .env.local
 ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+
+ENV DATABASE_URL ${DATABASE_URL}
+ENV JWT_SECRET_KEY ${JWT_SECRET_KEY}
+
+RUN echo "JWT_SECRET_KEY=$JWT_SECRET_KEY" >> .env.local
+RUN echo "DATABASE_URL=$DATABASE_URL" >> .env.local
 
 RUN npx prisma generate
 

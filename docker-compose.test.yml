@@ -15,6 +15,7 @@ services:
     build: 
       context: .
       args:
+        - JWT_SECRET_KEY=supersecret123
         - DATABASE_URL=mysql://root:mysql_password@database:3306/sygnmnt
     ports:
       - 3000:3000
