@@ -19,6 +19,7 @@ test('test with a successful submission', async () => {
         onLog: console.log,
         onError: console.error,
     });
+
     const exitCode = await runner.run({
         onLog: console.log,
         onError: console.error,
@@ -35,10 +36,7 @@ test('test submission with syntax error', async () => {
         },
     ], "C");
 
-    await expect(runner.build({
-        onLog: console.log,
-        onError: console.error,
-    }))
+    await expect(runner.build())
         .rejects
         .toThrow(new BuildError(1));
 });
@@ -71,10 +69,7 @@ test('test submission that fails', async () => {
 test('test submission without file', async () => {
     const runner = new Runner([], "C");
 
-    await expect(runner.build({
-        onLog: console.log,
-        onError: console.error,
-    }))
+    await expect(runner.build())
         .rejects
         .toThrow(new BuildError(1));
 });
@@ -87,10 +82,7 @@ test('test submission with custom dockerfile', async () => {
         }
     ], "C");
 
-    await expect(runner.build({
-        onLog: console.log,
-        onError: console.error,
-    }))
+    await expect(runner.build())
         .rejects
         .toThrow(Error);
 });

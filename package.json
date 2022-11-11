@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "jest --silent",
+    "test": "jest --silent=false",
     "lint": "next lint"
   },
   "dependencies": {
