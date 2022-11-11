@@ -1,5 +1,6 @@
 import { Role, Team as PrismaTeam, User, Membership as PrismaMembership } from "@prisma/client";
 import { ForbiddenError } from "./errors";
+import prisma from "./prisma";
 
 export type GetTeamByIdResponseType = {
     id: string;

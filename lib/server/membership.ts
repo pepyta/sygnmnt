@@ -1,4 +1,5 @@
 import { User } from "@prisma/client";
+import prisma from "./prisma";
 
 export default class Membership {
     public static async getByTeamId(user: User, teamId: string) {

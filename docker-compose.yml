@@ -1,0 +1,22 @@
+services:
+  website:
+    command: bash ./scripts/wait-for-it.sh database:3306 -s -t 0 -- bash -c "docker pull gcc:4.9 && npx prisma db push && npm run start"
+    build: 
+      context: .
+      args:
+        - JWT_SECRET_KEY=supersecret123
+        - DATABASE_URL=mysql://root:mysql_password@database:3306/sygnmnt
+    ports:
+      - 3000:3000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - database
+
+  database:
+    image: mysql
+    expose:
+      - 3306:3306
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysql_password

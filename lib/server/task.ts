@@ -1,4 +1,5 @@
 import { ProgrammingLanguage, Team as PrismaTeam } from "@prisma/client";
+import prisma from "./prisma";
 
 export default class Task {
     /**
