@@ -1,4 +1,4 @@
-import { GetTeamByIdResponseType } from "@pages/api/team/[teamId]/index";
+import { GetTeamByIdResponseType } from "@lib/server/team";
 import { Team as PrismaTeam } from "@prisma/client";
 import Authentication from "./auth";
 import RootApiHandler from "./fetch";
