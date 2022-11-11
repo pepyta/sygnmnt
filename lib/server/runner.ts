@@ -37,7 +37,7 @@ export default class Runner {
     private static MAX_MEMORY = "128M";
     private static MAX_CPU_CORE = 1;
 
-    private static BUILD_TIMEOUT = 10000;
+    private static BUILD_TIMEOUT = 20000;
     private static RUN_TIMEOUT = 1000;
     
     private id: string;
