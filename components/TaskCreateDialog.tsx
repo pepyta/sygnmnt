@@ -5,6 +5,9 @@ import { useState } from "react";
 import ProgrammingLanugageSelect from "./ProgrammingLanugageSelect";
 import Task from "@lib/client/task";
 import { LoadingButton } from "@mui/lab";
+import FolderForm from "./FolderForm";
+import { RunnerFile } from "@lib/server/runner";
+import DockerFile from "@lib/server/docker";
 
 export type TaskCreateDialogProps = DialogProps & {
     team: Team;
@@ -16,6 +19,8 @@ const TaskCreateDialog = ({ onCreate, team, ...props }: TaskCreateDialogProps) =
     const [description, setDescription] = useState("");
     const [language, setLanguage] = useState<ProgrammingLanguage>("CPP");
     const [isLoading, setLoading] = useState(false);
+    const [page, setPage] = useState<"SUMMARY" | "FILES">("SUMMARY");
+    const [files, setFiles] = useState<RunnerFile[]>([]);
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -23,7 +28,7 @@ const TaskCreateDialog = ({ onCreate, team, ...props }: TaskCreateDialogProps) =
         try {
             setLoading(true);
 
-            const { message, task } = await Task.create(team.id, name, description, language);
+            const { message, task } = await Task.create(team.id, name, description, language, files);
             onCreate(task);
             props.onClose({}, "backdropClick");
             enqueueSnackbar(message);
@@ -35,6 +40,41 @@ const TaskCreateDialog = ({ onCreate, team, ...props }: TaskCreateDialogProps) =
             setLoading(false);
         }
     };
+
+    if (page === "FILES") {
+        return (
+
+            <Dialog fullWidth maxWidth={"md"} {...props}>
+                <DialogContent>
+                    <FolderForm
+                        onEdit={setFiles}
+                        files={[
+                            ...files,
+                        ].map((file) => ({
+                            ...file,
+                            disabled: isLoading,
+                        }))}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        disabled={isLoading}
+                        onClick={() => setPage("SUMMARY")}
+                    >
+                        Back
+                    </Button>
+                    <LoadingButton
+                        loading={isLoading}
+                        disabled={isLoading || files.length === 0}
+                        variant={"contained"}
+                        onClick={create}
+                    >
+                        Create
+                    </LoadingButton>
+                </DialogActions>
+            </Dialog>
+        );
+    }
 
     return (
         <Dialog fullWidth maxWidth={"sm"} {...props}>
@@ -86,12 +126,11 @@ const TaskCreateDialog = ({ onCreate, team, ...props }: TaskCreateDialogProps) =
                     Close
                 </Button>
                 <LoadingButton
-                    loading={isLoading}
-                    disabled={isLoading}
+                    disabled={name.length === 0 || description.length === 0}
                     variant={"contained"}
-                    onClick={create}
+                    onClick={() => setPage("FILES")}
                 >
-                    Create
+                    Next
                 </LoadingButton>
             </DialogActions>
 

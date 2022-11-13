@@ -20,12 +20,12 @@ const createTask = async (req: NextApiRequest) => {
     }
 
     // verify parameters
-    const { name, description, language } = JSON.parse(req.body);
+    const { name, description, language, files } = JSON.parse(req.body);
     if(!name || name.length === 0) throw new Error("You must set a name for the task!");
     if(!description || description.length === 0) throw new Error("You must set a description for the task!");
     const programmingLanguage: ProgrammingLanguage = language === "C" ? "C" : "CPP";
 
-    const task = await Task.create(membership.team, name, description, programmingLanguage);
+    const task = await Task.create(membership.team, name, description, programmingLanguage, files);
 
     return {
         message: "Task successfully created!",

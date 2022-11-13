@@ -13,7 +13,9 @@ import "@uiw/react-textarea-code-editor/dist.css";
 import { DeleteRounded, FolderRounded as FolderIcon, InsertDriveFileRounded, NavigateNextRounded, RemoveRounded } from "@mui/icons-material";
 import FileCreateDialog from "./FileCreateDialog";
 export type FolderFormProps = {
-    files: RunnerFile[];
+    files: (RunnerFile & {
+        disabled?: boolean;
+    })[];
     onEdit: (files: RunnerFile[]) => void;
 };
 
@@ -54,6 +56,8 @@ const FolderForm = ({ files, onEdit, ...props }: FolderFormProps) => {
         () => files.find((file) => file.name === selectedPath),
         [selectedPath, files],
     );
+
+    console.log(files);
 
     const directory = useMemo(
         () => {
@@ -171,7 +175,6 @@ const FolderForm = ({ files, onEdit, ...props }: FolderFormProps) => {
         return (
             <TreeItem
                 onContextMenu={(e) => {
-
                     e.preventDefault();
                     setContextMenu(
                         contextMenu === null
@@ -259,6 +262,7 @@ const FolderForm = ({ files, onEdit, ...props }: FolderFormProps) => {
                     </Breadcrumbs>
                     <CodeEditor
                         value={selectedFile.content}
+                        disabled={selectedFile.disabled}
                         language={selectedPath.split(".")[selectedPath.split(".").length - 1]}
                         placeholder="Enter the code of this file"
                         onChange={(evn) => changeFile(evn.target.value)}

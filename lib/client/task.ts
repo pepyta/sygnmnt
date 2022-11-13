@@ -1,12 +1,12 @@
-import { ProgrammingLanguage } from "@prisma/client";
+import * as Prisma from "@prisma/client";
 import RootApiHandler from "./fetch";
-import { Task as PrismaTask } from "@prisma/client";
 import Authentication from "./auth";
+import { RunnerFile } from "@lib/server/runner";
 
 export default class Task {
-    public static async create(teamId: string, name: string, description: string, language: ProgrammingLanguage): Promise<{
+    public static async create(teamId: string, name: string, description: string, language: Prisma.ProgrammingLanguage, files: RunnerFile[]): Promise<{
         message: string;
-        task: PrismaTask;
+        task: Prisma.Task;
     }> {
         return await RootApiHandler.fetch(`/api/team/${teamId}/task`, {
             method: "POST",
@@ -14,6 +14,10 @@ export default class Task {
                 name,
                 description,
                 language,
+                files: files.map((file) => ({
+                    name: file.name,
+                    content: file.content,
+                })),
             }),
             headers: {
                 "Authorization": `Bearer ${Authentication.getAccessToken()}`,
@@ -21,7 +25,7 @@ export default class Task {
         });
     }
 
-    public static async getAll(teamId: string): Promise<PrismaTask[]> {
+    public static async getAll(teamId: string): Promise<(Prisma.Task & { files: Prisma.File[] })[]> {
         return await RootApiHandler.fetch(`/api/team/${teamId}/task`, {
             method: "GET",
             headers: {

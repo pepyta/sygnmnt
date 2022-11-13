@@ -27,6 +27,8 @@ const FileCreateDialog = ({ onCreate, ...props }: FileCreateDialogProps) => {
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
+                            label={"Filename"}
+                            autoFocus
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             fullWidth

@@ -1,6 +1,6 @@
 import { RunnerFile } from "@lib/server/runner";
 import { Button, Dialog, DialogActions, DialogContent, DialogProps, Grid, TextField, Typography, useTheme } from "@mui/material";
-import { Task, Team } from "@prisma/client";
+import { File, Task, Team } from "@prisma/client";
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useSnackbar } from "notistack";
@@ -8,7 +8,9 @@ import Submission from "@lib/client/submission";
 import FolderForm from "./FolderForm";
 
 export type SubmissionCreateDialogProps = DialogProps & {
-    task: Task;
+    task: Task & {
+        files: File[];
+    };
     team: Team;
 };
 
@@ -60,7 +62,18 @@ const SubmissionCreateDialog = ({ team, task, ...props }: SubmissionCreateDialog
                         </Typography>
                     </Grid>
                     <Grid item xs={12} sx={{ backgroundColor: theme.palette.background.default }}>
-                        <FolderForm files={files} onEdit={setFiles} />
+                        <FolderForm
+                        files={[
+                            ...files,
+                            ...task.files.map((file) => ({
+                                ...file,
+                                disabled: true,
+                            }))
+                        ]}
+                        onEdit={(newFiles) => {
+                            setFiles(newFiles.filter((file) => !task.files.find((el) => file.name === el.name)))
+                        }}
+                        />
                     </Grid>
                     <Grid item xs={12}>
                         <LoadingButton onClick={submit} loading={isLoading} disabled={files.length === 0} variant={"contained"} sx={{ ml: "auto" }}>

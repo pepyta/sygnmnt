@@ -1,5 +1,6 @@
 import { ProgrammingLanguage, Team as PrismaTeam } from "@prisma/client";
 import prisma from "./prisma";
+import { RunnerFile } from "./runner";
 
 export default class Task {
     /**
@@ -10,7 +11,7 @@ export default class Task {
      * @param language The language of the task.
      * @returns A task that has been created.
      */
-    public static async create(team: PrismaTeam, name: string, description: string, language: ProgrammingLanguage) {
+    public static async create(team: PrismaTeam, name: string, description: string, language: ProgrammingLanguage, files: RunnerFile[]) {
         return await prisma.task.create({
             data: {
                 team: {
@@ -21,7 +22,12 @@ export default class Task {
                 language,
                 name,
                 description,
-            }
+                files: {
+                    createMany: {
+                        data: files,
+                    },
+                },
+            },
         });
     }
 
@@ -40,6 +46,17 @@ export default class Task {
             },
             orderBy: {
                 createdAt: "desc",
+            },
+        });
+    }
+
+    public static async getById(id: string) {
+        return await prisma.task.findUnique({
+            where: {
+                id,
+            },
+            include: {
+                files: true,
             },
         });
     }

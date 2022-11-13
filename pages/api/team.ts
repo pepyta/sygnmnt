@@ -6,19 +6,6 @@ import Team from "@lib/server/team";
 import { Role } from "@prisma/client";
 import { NextApiRequest } from "next";
 
-export type TeamType = {
-    id: string;
-    name: string;
-    role: Role;
-    members: TeamMemberType[];
-};
-
-export type TeamMemberType = {
-    id: string;
-    username: string;
-    role: Role;
-};
-
 /**
  * Gets all teams, that the user has membership in.
  */

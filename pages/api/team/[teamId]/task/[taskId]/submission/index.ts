@@ -4,6 +4,7 @@ import manager from "@lib/server/manager";
 import Membership from "@lib/server/membership";
 import { middleware } from "@lib/server/middleware";
 import Submission from "@lib/server/submission";
+import Task from "@lib/server/task";
 import { Submission as PrismaSubmission } from "@prisma/client";
 import { NextApiRequest } from "next";
 
@@ -21,8 +22,9 @@ const createSubmission = async (req: NextApiRequest) => {
     // verify parameters
     const { files } = JSON.parse(req.body);
     if(!files || files.length === 0) throw new Error("You must send files to submission!");
+    const task = await Task.getById(taskId);
 
-    const submission = await Submission.create(user.id, taskId, files);
+    const submission = await Submission.create(user, task, files);
     manager.enqueue(submission);
 
     return {
