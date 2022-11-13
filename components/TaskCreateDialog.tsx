@@ -104,10 +104,12 @@ const TaskCreateDialog = ({ onCreate, team, ...props }: TaskCreateDialogProps) =
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <CodeEditor
+                        <TextField
                             disabled={isLoading}
                             required
-                            language="markdown"
+                            fullWidth
+                            multiline
+                            minRows={3}
                             label={"Description"}
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
