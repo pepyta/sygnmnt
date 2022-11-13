@@ -11,19 +11,16 @@ export type SubmissionListDialogProps = DialogProps & {
 };
 
 const SubmissionListDialog = ({ task, team, ...props }: SubmissionListDialogProps) => {
-    const [isLoading, setLoading] = useState(false);
-    const [submissions, setSubmission] = useState<PrismaSubmission[]>([]);
+    const [submissions, setSubmission] = useState<PrismaSubmission[]>();
     const [error, setError] = useState<Error>();
 
     const load = async () => {
         try {
-            setLoading(true);
             setSubmission(await Submission.getAll(team.id, task.id));
             setError(null);
+            setTimeout(() => load(), 2000);
         } catch (e) {
             setError(e);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -41,7 +38,7 @@ const SubmissionListDialog = ({ task, team, ...props }: SubmissionListDialogProp
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        {isLoading ? (
+                        {!submissions ? (
                             <CircularProgress />
                         ) : error ? (
                             <Typography>
@@ -57,9 +54,9 @@ const SubmissionListDialog = ({ task, team, ...props }: SubmissionListDialogProp
                 </Grid>
             </DialogContent>
             <DialogActions>
-                            <Button onClick={() => props.onClose({}, "backdropClick")}>
-                                Close
-                            </Button>
+                <Button onClick={() => props.onClose({}, "backdropClick")}>
+                    Close
+                </Button>
             </DialogActions>
         </Dialog>
     );

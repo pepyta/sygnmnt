@@ -13,7 +13,7 @@ const getTeamById = async (req: NextApiRequest) => {
     const user = await Authentication.getUser(req);
     if (!user) throw new UnauthorizedError();
 
-    const teamId = req.query.id as string;
+    const teamId = req.query.teamId as string;
 
     const membership = await Membership.getByTeamId(user, teamId);
 
@@ -34,7 +34,7 @@ const updateTeamById = async (req: NextApiRequest) => {
     if (!user) throw new UnauthorizedError();
     const { name } = JSON.parse(req.body);
 
-    const teamId = req.query.id as string;
+    const teamId = req.query.teamId as string;
     const membership = await Membership.getByTeamId(user, teamId);
 
     const team = await Team.update(name, membership);
