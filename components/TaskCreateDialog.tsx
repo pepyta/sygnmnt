@@ -7,7 +7,14 @@ import Task from "@lib/client/task";
 import { LoadingButton } from "@mui/lab";
 import FolderForm from "./FolderForm";
 import { RunnerFile } from "@lib/server/runner";
-import DockerFile from "@lib/server/docker";
+import dynamic from "next/dynamic";
+import "@uiw/react-textarea-code-editor/dist.css";
+
+const CodeEditor = dynamic(
+    () => import("@uiw/react-textarea-code-editor").then((mod) => mod.default),
+    { ssr: false }
+);
+
 
 export type TaskCreateDialogProps = DialogProps & {
     team: Team;
@@ -97,12 +104,10 @@ const TaskCreateDialog = ({ onCreate, team, ...props }: TaskCreateDialogProps) =
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField
+                        <CodeEditor
                             disabled={isLoading}
                             required
-                            fullWidth
-                            multiline
-                            minRows={3}
+                            language="markdown"
                             label={"Description"}
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}

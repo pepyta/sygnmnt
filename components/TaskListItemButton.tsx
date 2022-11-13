@@ -1,10 +1,12 @@
 import { ListItemButton, ListItemButtonBaseProps, ListItemText } from "@mui/material";
-import { Task, Team } from "@prisma/client";
+import { File, Task, Team } from "@prisma/client";
 import { useState } from "react";
 import TaskDetailsDialog from "./TaskDetailsDialog";
 
 export type TaskListItemButtonProps = ListItemButtonBaseProps & {
-    task: Task;
+    task: Task & {
+        files: File[];
+    };
     team: Team;
 };
 

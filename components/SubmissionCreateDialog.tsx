@@ -43,7 +43,7 @@ const SubmissionCreateDialog = ({ team, task, ...props }: SubmissionCreateDialog
             enqueueSnackbar(message, {
                 variant: "success",
             });
-        } catch(e) {
+        } catch (e) {
             enqueueSnackbar(e.message, {
                 variant: "error",
             });
@@ -63,16 +63,16 @@ const SubmissionCreateDialog = ({ team, task, ...props }: SubmissionCreateDialog
                     </Grid>
                     <Grid item xs={12} sx={{ backgroundColor: theme.palette.background.default }}>
                         <FolderForm
-                        files={[
-                            ...files,
-                            ...task.files.map((file) => ({
-                                ...file,
-                                disabled: true,
-                            }))
-                        ]}
-                        onEdit={(newFiles) => {
-                            setFiles(newFiles.filter((file) => !task.files.find((el) => file.name === el.name)))
-                        }}
+                            files={[
+                                ...files,
+                                ...task.files.map((file) => ({
+                                    ...file,
+                                    disabled: true,
+                                }))
+                            ]}
+                            onEdit={(newFiles) => {
+                                setFiles(newFiles.filter((file) => !task.files.find((el) => file.name === el.name)))
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12}>

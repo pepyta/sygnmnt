@@ -1,9 +1,11 @@
 import { List, ListProps } from "@mui/material"
-import { Task, Team } from "@prisma/client";
+import { File, Task, Team } from "@prisma/client";
 import TaskListItemButton from "./TaskListItemButton";
 
 export type TaskListProps = ListProps & {
-    tasks: Task[];
+    tasks: (Task & {
+        files: File[];
+    })[];
     team: Team;
 };
 

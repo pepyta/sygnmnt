@@ -5,7 +5,7 @@ import Team from "@lib/client/team";
 import { useMount } from "@lib/client/useMount";
 import { LoadingButton } from "@mui/lab";
 import { Card, CardContent, Container, Grid, Typography } from "@mui/material";
-import { Task as PrismaTask } from "@prisma/client";
+import { File, Task as PrismaTask } from "@prisma/client";
 import NextLink from "next/link";
 import { useState } from "react";
 import Task from "@lib/client/task";
@@ -20,7 +20,7 @@ const TeamPage = ({ id }: TeamPageProps) => {
     const [isLoading, setLoading] = useState(true);
     const [error, setError] = useState<Error>();
     const [team, setTeam] = useState<GetTeamByIdResponseType>();
-    const [tasks, setTasks] = useState<PrismaTask[]>();
+    const [tasks, setTasks] = useState<(PrismaTask & { files: File[] })[]>();
     
     const load = async () => {
         setLoading(true);

@@ -2,16 +2,16 @@ import { RunnerFile } from "@lib/server/runner";
 import { TreeItem, TreeView } from "@mui/lab";
 import { Breadcrumbs, Button, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography, useTheme } from "@mui/material";
 import { useMemo, useState } from "react";
-
 import dynamic from "next/dynamic";
+import { DeleteRounded, FolderRounded as FolderIcon, InsertDriveFileRounded, LockRounded, NavigateNextRounded, RemoveRounded } from "@mui/icons-material";
+import FileCreateDialog from "./FileCreateDialog";
+import "@uiw/react-textarea-code-editor/dist.css";
 
 const CodeEditor = dynamic(
     () => import("@uiw/react-textarea-code-editor").then((mod) => mod.default),
     { ssr: false }
 );
-import "@uiw/react-textarea-code-editor/dist.css";
-import { DeleteRounded, FolderRounded as FolderIcon, InsertDriveFileRounded, NavigateNextRounded, RemoveRounded } from "@mui/icons-material";
-import FileCreateDialog from "./FileCreateDialog";
+
 export type FolderFormProps = {
     files: (RunnerFile & {
         disabled?: boolean;
@@ -187,7 +187,7 @@ const FolderForm = ({ files, onEdit, ...props }: FolderFormProps) => {
                             : null,
                     );
                 }}
-                icon={<InsertDriveFileRounded />}
+                icon={files.find((el) => el.name === file.path).disabled ? <LockRounded /> : <InsertDriveFileRounded />}
                 nodeId={file.path}
                 label={file.name}
                 key={`file-${file.path}`}

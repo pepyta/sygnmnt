@@ -1,15 +1,13 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle, Grid, Typography } from "@mui/material";
-import { Submission as PrismaSubmission, Task, Team } from "@prisma/client";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, Grid, Typography } from "@mui/material";
+import { File, Task, Team } from "@prisma/client";
 import { useState } from "react";
-import SubmissionList from "./SubmissionList";
-import Submission from "@lib/client/submission";
-import { useMount } from "@lib/client/useMount";
-import { LoadingButton } from "@mui/lab";
 import SubmissionCreateDialog from "./SubmissionCreateDialog";
 import SubmissionListDialog from "./SubmissionListDialog";
 
 export type TaskDetailsDialogProps = DialogProps & {
-    task: Task;
+    task: Task & {
+        files: File[];
+    };
     team: Team;
 };
 
