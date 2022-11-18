@@ -50,6 +50,24 @@ export default class Team {
     }
 
     /**
+     * Adds a new user to an existing team.
+     * @param user The user to be added.
+     * @param team The team the user should be added to.
+     * @param role The role of the user in the existing team.
+     */
+    public static async addMember(user: User, team: PrismaTeam, role: Role) {
+        if (role === Role.OWNER)
+            throw new ForbiddenError();
+        await prisma.membership.create({
+            data: {
+                userId: user.id,
+                teamId: team.id,
+                role: role,
+            }
+        });
+    }
+
+    /**
      * Gets all of the teams for a given user.
      * @param user The user that we want to get the teams for.
      * @returns An array of teams.
