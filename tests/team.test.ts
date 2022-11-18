@@ -4,6 +4,46 @@ import Membership from '@lib/server/membership';
 import Team from '@lib/server/team';
 import { User } from '@prisma/client';
 import { randomUUID } from 'crypto';
+import { Team as PrismaTeam, Role } from "@prisma/client";
+
+describe("team access control", () => {
+    const teamName = "Secret team";
+    let user1: User, user2: User;
+    beforeAll(async () => {
+        const userAuth1 = { "username": `test-runner-${randomUUID()}`, "password": randomUUID() },
+            userAuth2 = { "username": `test-runner-${randomUUID()}`, "password": randomUUID() };
+        await Authentication.register(userAuth1["username"], userAuth1["password"]);
+        await Authentication.register(userAuth2["username"], userAuth2["password"]);
+        const access_token1 = await Authentication.login(userAuth1["username"], userAuth1["password"]),
+            access_token2 = await Authentication.login(userAuth2["username"], userAuth2["password"]);
+        user1 = Authentication.verifyToken(access_token1),
+            user2 = Authentication.verifyToken(access_token2);
+    });
+
+    let createdTeam: PrismaTeam;
+
+    test('user1 should be able to create team', async () => {
+        createdTeam = await Team.create(teamName, user1);
+    });
+
+    test('user2 should not be able to access user1\'s team', async () => {
+        await expect(Membership.getByTeamId(user2, createdTeam.id)).rejects.toThrowError();
+        expect(await Membership.getByTeamId(user1, createdTeam.id)).toBeTruthy();
+    });
+
+    test('adding user2 to user1\'s team', async () => {
+        await Team.addMember(user2, createdTeam, Role.AUXILIARY);
+    });
+
+    let user2Membership;
+    test('user2 should now be able to access user1\'s team', async () => {
+        expect(user2Membership = await Membership.getByTeamId(user2, createdTeam.id)).toBeTruthy();
+    });
+
+    test('user2 should still be unable to change the team\'s name', async () => {
+        await expect(Team.update("Doesn't matter", user2Membership)).rejects.toThrowError();
+    });
+});
 
 describe("team creation and management", () => {
     const teamName = "Test team";
