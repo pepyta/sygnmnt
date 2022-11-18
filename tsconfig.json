@@ -21,14 +21,14 @@
     "baseUrl": ".",
     "paths": {
       "@pages/*": [
-        "./pages/*",
+        "./pages/*"
       ],
       "@lib/*": [
-        "./lib/*",
+        "./lib/*"
       ],
       "@components/*": [
-        "./components/*",
-      ],
+        "./components/*"
+      ]
     }
   },
   "include": [

@@ -1,21 +1,10 @@
 import { Authentication } from "@lib/server/auth";
-import { MethodNotImplementedError, UnauthorizedError, UnsupportedMethodError } from "@lib/server/errors";
+import { UnauthorizedError, UnsupportedMethodError } from "@lib/server/errors";
 import { middleware } from "@lib/server/middleware";
 import prisma from "@lib/server/prisma";
+import Team from "@lib/server/team";
 import { Role } from "@prisma/client";
 import { NextApiRequest } from "next";
-
-export type TeamType = {
-    name: string;
-    role: Role;
-    members: TeamMemberType[];
-};
-
-export type TeamMemberType = {
-    id: string;
-    username: string;
-    role: Role;
-};
 
 /**
  * Gets all teams, that the user has membership in.
@@ -25,17 +14,7 @@ export type TeamMemberType = {
     if(!user) throw new UnauthorizedError();
 
     // get all memberships of the given user
-    const memberships = await prisma.membership.findMany({
-        where: {
-            userId: user.id,
-        },
-        include: {
-            team: true,
-        },
-    });
-
-    // return only the team objects, exclude additional informations from membership
-    const teams = memberships.map((membership) => membership.team);
+    const teams = await Team.getAll(user);
 
     return {
         teams,
@@ -50,32 +29,11 @@ const create = async (req: NextApiRequest) => {
     if(!user) throw new UnauthorizedError();
 
     const name: string = JSON.parse(req.body).name;
-    if(!name || name.length === 0) {
-        throw new Error("A team's name must be at least one character long!");
-    }
-
-    const membership = await prisma.membership.create({
-        data: {
-            user: {
-                connect: {
-                    id: user.id,
-                },
-            },
-            team: {
-                create: {
-                    name,
-                },
-            },
-            role: "OWNER",
-        },
-        include: {
-            team: true,
-        },
-    });
+    const team = await Team.create(name, user);
 
     return {
         message: "Team created successfully!",
-        team: membership.team,
+        team,
     };
 };
 

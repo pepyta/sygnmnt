@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import Runner, { BuildError, RuntimeError, UnauthorizedError } from "./runner";
+import Runner, { BuildError, RuntimeError, UnauthorizedError } from "@lib/server/runner";
 import fs from "fs/promises";
 import path from 'path';
 
@@ -16,6 +16,7 @@ test('test with a successful submission', async () => {
     ], "C");
 
     await runner.build();
+
     const exitCode = await runner.run();
 
     expect(exitCode).toBe(0);

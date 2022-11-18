@@ -16,11 +16,13 @@
     "@mui/lab": "^5.0.0-alpha.101",
     "@mui/material": "^5.10.7",
     "@prisma/client": "4.4.0",
+    "@uiw/react-textarea-code-editor": "^2.0.4",
     "bcryptjs": "^2.4.3",
     "dockerode": "^3.3.4",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
     "next": "12.3.1",
+    "next-remove-imports": "^1.0.8",
     "notistack": "^2.0.5",
     "react": "18.2.0",
     "react-dom": "18.2.0"
