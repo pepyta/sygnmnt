@@ -10,6 +10,7 @@ import MemberCard from "@components/MemberCard";
 import Membership from "@lib/client/membership";
 import { TeamNotFoundError } from "@lib/server/errors";
 import { useMemberships } from "@redux/slices/membership";
+import TaskCard from "@components/TaskCard";
 
 export type TeamPageProps = {
     id: string;
@@ -88,26 +89,16 @@ const TeamPage = ({ id }: TeamPageProps) => {
         <Container maxWidth={"sm"} sx={{ pt: 2, pb: 2}}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
-                    <Card>
-                        <CardContent sx={{ pb: 0 }}>
-                            <Typography variant={"h5"}>
-                                Tasks
-                            </Typography>
-                        </CardContent>
-                        <TaskList
-                            team={membership.team}
-                        />
-                    </Card>
+                    <TaskCard
+                        membership={membership}
+                    />
                 </Grid>
                 <Grid item xs={12}>
-                    <MemberCard team={membership.team} />
+                    <MemberCard
+                        team={membership.team}
+                    />
                 </Grid>
             </Grid>
-            <TaskCreateFab
-                sx={{ position: "fixed", bottom: 0, right: 0, m: 4 }}
-                color={"primary"}
-                team={membership.team}
-            />
         </Container>
     );
 };

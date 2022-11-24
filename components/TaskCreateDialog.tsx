@@ -27,9 +27,17 @@ const TaskCreateDialog = ({ team, ...props }: TaskCreateDialogProps) => {
         try {
             setLoading(true);
 
-            const { message, task } = await Task.create(team.id, name, description, language, files);
+            const { message } = await Task.create(team.id, name, description, language, files);
             props.onClose({}, "backdropClick");
             enqueueSnackbar(message);
+            
+            // reset dialog state
+            setName("");
+            setPage("SUMMARY");
+            setDescription("");
+            setLanguage("CPP");
+            setLoading(false);
+            setFiles([]);
         } catch (e) {
             enqueueSnackbar(e.message, {
                 variant: "error",
@@ -41,7 +49,6 @@ const TaskCreateDialog = ({ team, ...props }: TaskCreateDialogProps) => {
 
     if (page === "FILES") {
         return (
-
             <Dialog fullWidth maxWidth={"md"} {...props}>
                 <DialogContent>
                     <FolderForm
