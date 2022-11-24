@@ -5,7 +5,19 @@ import { SnackbarProvider } from 'notistack';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from '@redux/store';
 
-const theme = createTheme();
+const theme = createTheme({
+    components: {
+        MuiDialogActions: {
+            defaultProps: {
+                sx: {
+                    pr: 3,
+                    pl: 3,
+                    pb: 2,
+                },
+            },
+        }
+    },
+});
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
     return (
