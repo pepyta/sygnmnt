@@ -1,6 +1,7 @@
 import { InvitationType } from "@lib/client/invitation";
 import Prisma from "@prisma/client";
 import { AlreadyMemberError, InvitationNotFoundError } from "./errors";
+import prisma from "./prisma";
 
 export default class Invitation {
     /**
@@ -68,6 +69,8 @@ export default class Invitation {
         }
 
         await Invitation.deleteInvitation(pendingInvitation);
+
+        return true;
     }
 
     /**
@@ -98,6 +101,8 @@ export default class Invitation {
         });
 
         await Invitation.deleteInvitation(pendingInvitation);
+
+        return membership;
     }
 
     /**
