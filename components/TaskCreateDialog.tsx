@@ -8,20 +8,12 @@ import { LoadingButton } from "@mui/lab";
 import FolderForm from "./FolderForm";
 import { RunnerFile } from "@lib/server/runner";
 import dynamic from "next/dynamic";
-import "@uiw/react-textarea-code-editor/dist.css";
-
-const CodeEditor = dynamic(
-    () => import("@uiw/react-textarea-code-editor").then((mod) => mod.default),
-    { ssr: false }
-);
-
 
 export type TaskCreateDialogProps = DialogProps & {
     team: Team;
-    onCreate: (task: PrismaTask) => void;
 };
 
-const TaskCreateDialog = ({ onCreate, team, ...props }: TaskCreateDialogProps) => {
+const TaskCreateDialog = ({ team, ...props }: TaskCreateDialogProps) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [language, setLanguage] = useState<ProgrammingLanguage>("CPP");
@@ -36,7 +28,6 @@ const TaskCreateDialog = ({ onCreate, team, ...props }: TaskCreateDialogProps) =
             setLoading(true);
 
             const { message, task } = await Task.create(team.id, name, description, language, files);
-            onCreate(task);
             props.onClose({}, "backdropClick");
             enqueueSnackbar(message);
         } catch (e) {
