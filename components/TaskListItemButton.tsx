@@ -1,16 +1,13 @@
 import { ListItemButton, ListItemButtonBaseProps, ListItemText } from "@mui/material";
-import { File, Task, Team } from "@prisma/client";
+import { ExtendedTaskType } from "@redux/slices/membership";
 import { useState } from "react";
 import TaskDetailsDialog from "./TaskDetailsDialog";
 
 export type TaskListItemButtonProps = ListItemButtonBaseProps & {
-    task: Task & {
-        files: File[];
-    };
-    team: Team;
+    task: ExtendedTaskType;
 };
 
-const TaskListItemButton = ({ task, team, ...props }: TaskListItemButtonProps) => {
+const TaskListItemButton = ({ task, ...props }: TaskListItemButtonProps) => {
     const [isOpen, setOpen] = useState(false);
 
     return (
@@ -24,7 +21,6 @@ const TaskListItemButton = ({ task, team, ...props }: TaskListItemButtonProps) =
             <TaskDetailsDialog
                 open={isOpen}
                 onClose={() => setOpen(false)}
-                team={team}
                 task={task}
             />
         </>

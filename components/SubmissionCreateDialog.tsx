@@ -6,40 +6,24 @@ import { LoadingButton } from "@mui/lab";
 import { useSnackbar } from "notistack";
 import Submission from "@lib/client/submission";
 import FolderForm from "./FolderForm";
+import { ExtendedTaskType } from "@redux/slices/membership";
 
 export type SubmissionCreateDialogProps = DialogProps & {
-    task: Task & {
-        files: File[];
-    };
-    team: Team;
+    task: ExtendedTaskType;
 };
 
-const SubmissionCreateDialog = ({ team, task, ...props }: SubmissionCreateDialogProps) => {
+const SubmissionCreateDialog = ({ task, ...props }: SubmissionCreateDialogProps) => {
     const theme = useTheme();
     const [isLoading, setLoading] = useState(false);
     const [files, setFiles] = useState<RunnerFile[]>([]);
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const createFile = () => setFiles([...files, { name: "Untitled", content: "" }]);
-
-    const changeName = (index: number, name: string) => {
-        const newFiles = [...files];
-        files[index].name = name;
-        setFiles(newFiles);
-    };
-
-    const changeContent = (index: number, content: string) => {
-        const newFiles = [...files];
-        files[index].content = content;
-        setFiles(newFiles);
-    };
-
     const submit = async () => {
         try {
             setLoading(true);
 
-            const { message } = await Submission.create(team.id, task.id, files);
+            const { message } = await Submission.create(task.id, files);
             enqueueSnackbar(message, {
                 variant: "success",
             });

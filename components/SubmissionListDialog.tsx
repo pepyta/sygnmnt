@@ -7,16 +7,15 @@ import SubmissionList from "./SubmissionList";
 
 export type SubmissionListDialogProps = DialogProps & {
     task: Task;
-    team: Team;
 };
 
-const SubmissionListDialog = ({ task, team, ...props }: SubmissionListDialogProps) => {
+const SubmissionListDialog = ({ task, ...props }: SubmissionListDialogProps) => {
     const [submissions, setSubmission] = useState<PrismaSubmission[]>();
     const [error, setError] = useState<Error>();
 
     const load = async () => {
         try {
-            setSubmission(await Submission.getAll(team.id, task.id));
+            setSubmission(await Submission.getAll(task.id));
             setError(null);
             setTimeout(() => load(), 2000);
         } catch (e) {

@@ -39,7 +39,7 @@ const TaskCard = ({ membership, ...props }: TaskCardProps) => {
                 </Grid>
             </Box>
             <TaskList
-                team={membership.team}
+                membership={membership}
             />
         </Card>
     );
