@@ -1,5 +1,5 @@
 import { Authentication } from "@lib/server/auth";
-import { UnsupportedMethodError } from "@lib/server/errors";
+import { ForbiddenError, UnsupportedMethodError } from "@lib/server/errors";
 import manager from "@lib/server/manager";
 import Membership from "@lib/server/membership";
 import { middleware } from "@lib/server/middleware";
@@ -17,7 +17,10 @@ const createSubmission = async (req: NextApiRequest) => {
     const taskId = req.query.taskId as string;
     const membership = await Membership.getByTeamId(user, teamId);
 
-    // todo: check if the user is a student
+    // only allow submissions from students
+    if(membership.role !== "MEMBER") {
+        throw new ForbiddenError();
+    }
 
     // verify parameters
     const { files } = JSON.parse(req.body);
