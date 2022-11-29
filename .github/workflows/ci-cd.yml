@@ -39,6 +39,15 @@ jobs:
       with:
         node-version: 18.x
         cache: 'npm'
+    - name: Shutdown Ubuntu MySQL (SUDO)
+      run: sudo service mysql stop 
+    - uses: mirromutth/mysql-action@v1.1
+      with: 
+        mysql root password: supersecret123
+    - name: Create dotenv file for database
+      run: echo DATABASE_URL="mysql://root:supersecret123@localhost:3306/sygnmnt" >> .env
+    - name: Install dependencies
+      run: npm ci
     - name: Run Jest coverage tool
       run: npm run test:cov
     - name: Download codecov tool from server
