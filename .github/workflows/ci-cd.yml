@@ -39,6 +39,8 @@ jobs:
       with:
         node-version: 18.x
         cache: 'npm'
+    - name: Run Jest coverage tool
+      run: npm run test:cov
     - name: Download codecov tool from server
       run: curl -Os https://uploader.codecov.io/latest/linux/codecov
     - name: Run Codecov test
