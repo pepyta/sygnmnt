@@ -50,6 +50,8 @@ jobs:
       run: echo DATABASE_URL="mysql://root:supersecret123@localhost:3306/sygnmnt" >> .env
     - name: Add a secret token for jwt keys
       run: echo JWT_SECRET_KEY="yetanothersupersecretkey" >> .env
+    - name: Pull GCC image from Docker
+      run: docker pull gcc:4.9
     - name: Create database
       run: npx prisma db push
     - name: Run Jest coverage tool
