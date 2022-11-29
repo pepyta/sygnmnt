@@ -2,20 +2,25 @@ import Submission from "@lib/client/submission";
 import { useMount } from "@lib/client/useMount";
 import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogProps, Grid, Typography } from "@mui/material";
 import { Submission as PrismaSubmission, Task, Team } from "@prisma/client";
-import { useState } from "react";
+import { ExtendedTaskType, useMemberships } from "@redux/slices/membership";
+import { useMemo, useState } from "react";
 import SubmissionList from "./SubmissionList";
 
 export type SubmissionListDialogProps = DialogProps & {
-    task: Task;
+    task: ExtendedTaskType;
 };
 
 const SubmissionListDialog = ({ task, ...props }: SubmissionListDialogProps) => {
-    const [submissions, setSubmission] = useState<PrismaSubmission[]>();
+    const { memberships } = useMemberships();
+    const membership = useMemo(
+        () => memberships.find((el) => el.team.tasks.some((el) => el.id === task.id)),
+        [memberships, task],
+    );
+
     const [error, setError] = useState<Error>();
 
     const load = async () => {
         try {
-            setSubmission(await Submission.getAll(task.id));
             setError(null);
             setTimeout(() => load(), 2000);
         } catch (e) {
@@ -37,16 +42,14 @@ const SubmissionListDialog = ({ task, ...props }: SubmissionListDialogProps) => 
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        {!submissions ? (
-                            <CircularProgress />
-                        ) : error ? (
+                        {error ? (
                             <Typography>
                                 An error happend while loading the submissions: {error.message}
                             </Typography>
                         ) : (
                             <SubmissionList
                                 sx={{ ml: -3, mr: -3 }}
-                                submissions={submissions}
+                                submissions={task.submissions}
                             />
                         )}
                     </Grid>

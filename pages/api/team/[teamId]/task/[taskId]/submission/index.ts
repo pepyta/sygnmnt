@@ -36,33 +36,9 @@ const createSubmission = async (req: NextApiRequest) => {
     };
 };
 
-const getSubmissions = async (req: NextApiRequest) => {
-    // get the user
-    const user = await Authentication.getUser(req);
-
-    // get the team that we want to create the task for
-    const teamId = req.query.teamId as string;
-    const taskId = req.query.taskId as string;
-    const membership = await Membership.getByTeamId(user, teamId);
-    
-    const submissions = await Submission.getAll(taskId);
-
-    const isShown = (submission: PrismaSubmission) => {
-        // show every submissson for owners and auxiliaries
-        if(membership.role === "OWNER" || membership.role === "AUXILIARY") return true;
-    
-        // show only user's submissions for students
-        return submission.userId === user.id;
-    };
-
-    return submissions.filter(isShown);
-};
-
 const controller = async (req: NextApiRequest) => {
     if(req.method === "POST") {
         return await createSubmission(req);
-    } if(req.method === "GET") {
-        return await getSubmissions(req);
     } else {
         throw new UnsupportedMethodError();
     }
