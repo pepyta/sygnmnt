@@ -29,3 +29,34 @@ jobs:
         cache: 'npm'
     - name: Run tests in Docker container
       run: ./scripts/test.sh
+
+  codecov:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        cache: 'npm'
+    - name: Shutdown Ubuntu MySQL (SUDO)
+      run: sudo service mysql stop 
+    - uses: mirromutth/mysql-action@v1.1
+      with: 
+        mysql root password: supersecret123
+    - name: Install dependencies
+      run: npm ci
+    - name: Create dotenv file for database
+      run: echo DATABASE_URL="mysql://root:supersecret123@localhost:3306/sygnmnt" >> .env
+    - name: Add a secret token for jwt keys
+      run: echo JWT_SECRET_KEY="yetanothersupersecretkey" >> .env
+    - name: Pull GCC image from Docker
+      run: docker pull gcc:4.9
+    - name: Create database
+      run: npx prisma db push
+    - name: Run Jest coverage tool
+      run: npm run test:cov
+    - name: Download codecov tool from server
+      run: curl -Os https://uploader.codecov.io/latest/linux/codecov
+    - name: Run Codecov test
+      run: chmod +x codecov && ./codecov
