@@ -38,6 +38,10 @@ const SubmissionListDialog = ({ submissions, ...props }: SubmissionListDialogPro
                             <Typography>
                                 An error happend while loading the submissions: {error.message}
                             </Typography>
+                        ) : submissions.length === 0 ? (
+                            <Typography>
+                                No submissions found for this task.
+                            </Typography>
                         ) : (
                             <SubmissionList
                                 sx={{ ml: -3, mr: -3 }}
