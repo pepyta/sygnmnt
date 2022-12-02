@@ -2,15 +2,19 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import { File, Task, Team } from "@prisma/client";
 import { ExtendedTaskType, useMemberships } from "@redux/slices/membership";
 import { useMemo, useState } from "react";
+import CloseButton from "./CloseButton";
+import SelectStudentDialog from "./SelectStudentDialog";
 import SubmissionCreateDialog from "./SubmissionCreateDialog";
 import SubmissionListDialog from "./SubmissionListDialog";
 
 export type TaskDetailsDialogProps = DialogProps & {
-    task:  ExtendedTaskType;
+    task: ExtendedTaskType;
 };
 
 const TaskDetailsDialog = ({ task, ...props }: TaskDetailsDialogProps) => {
     const [isCreateOpen, setCreateOpen] = useState(false);
+    const [selectedStudent, setSelectedStudent] = useState(null);
+    const [isStudentSelectOpen, setStudentSelectOpen] = useState(false);
     const [isListOpen, setListOpen] = useState(false);
 
     const { memberships } = useMemberships();
@@ -19,21 +23,53 @@ const TaskDetailsDialog = ({ task, ...props }: TaskDetailsDialogProps) => {
         [memberships, task],
     );
 
-    
-    const openListDialog = () => setListOpen(true);
+
+    const openListDialog = () => {
+        if (membership.role === "MEMBER") {
+            setListOpen(true);
+        } else {
+            setStudentSelectOpen(true);
+        }
+    };
+
     const openCreateDialog = () => setCreateOpen(true);
 
     return (
         <>
+            {membership.role === "MEMBER" && (
+                <SubmissionListDialog
+                    submissions={task.submissions}
+                    open={isListOpen}
+                    onClose={() => setListOpen(false)}
+                />
+            )}
+            {!!selectedStudent && (
+                <SubmissionListDialog
+                    submissions={task.submissions
+                        .filter(
+                            (submission) => submission.userId === selectedStudent.id
+                        )
+                    }
+                    open={isListOpen}
+                    onClose={() => setListOpen(false)}
+                />
+            )}
+            <SelectStudentDialog
+                onSelect={(student) => {
+                    setSelectedStudent(student);
+                    setListOpen(true);
+                }}
+                students={membership.team.memberships
+                    .filter((membership) => membership.role === "MEMBER")
+                    .map((membership) => membership.user)
+                }
+                open={isStudentSelectOpen}
+                onClose={() => setStudentSelectOpen(false)}
+            />
             <SubmissionCreateDialog
                 task={task}
                 open={isCreateOpen}
                 onClose={() => setCreateOpen(false)}
-            />
-            <SubmissionListDialog
-                task={task}
-                open={isListOpen}
-                onClose={() => setListOpen(false)}
             />
             <Dialog fullWidth maxWidth={"sm"} {...props}>
                 <DialogContent>
@@ -63,9 +99,9 @@ const TaskDetailsDialog = ({ task, ...props }: TaskDetailsDialogProps) => {
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => props.onClose({}, "escapeKeyDown")}>
-                        Close
-                    </Button>
+                    <CloseButton
+                        onClick={() => props.onClose({}, "escapeKeyDown")}
+                    />
                 </DialogActions>
             </Dialog>
         </>
