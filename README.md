@@ -1,5 +1,7 @@
 # SYGNMNT
 
+[![codecov](https://codecov.io/gh/pepyta/sygnmnt/branch/main/graph/badge.svg?token=7PU26HS1T2)](https://codecov.io/gh/pepyta/sygnmnt)
+
 The SYGNMNT project is an assignment management website, where the teachers can create coding tasks for students with automated tests.
 
 The project is part of the Tools of Software Projects (IP-18KVPRJG) assignment.

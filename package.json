@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "test": "jest",
+    "test:cov": "jest --coverage",
     "lint": "next lint"
   },
   "dependencies": {
