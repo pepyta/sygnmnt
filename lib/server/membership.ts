@@ -1,10 +1,16 @@
 import { User } from "@prisma/client";
 import { ExtendedMembershipType } from "@redux/slices/membership";
+import { TeamNotFoundError } from "./errors";
 
 export default class Membership {
     public static async getByTeamId(user: User, teamId: string) {
         const memberships = await Membership.getAll(user);
-        return memberships.find((membership) => membership.team.id === teamId);
+        const membership = memberships.find((membership) => membership.team.id === teamId);
+        if(!membership) {
+            throw new TeamNotFoundError();
+        }
+        
+        return membership;
     }
 
     /**
