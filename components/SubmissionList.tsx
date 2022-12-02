@@ -1,9 +1,9 @@
 import { List, ListProps } from "@mui/material";
-import { Submission } from "@prisma/client";
+import { ExtendedSubmissionType } from "@redux/slices/membership";
 import SubmissionListItemButton from "./SubmissionListItemButton";
 
 export type SubmissionListProps = ListProps & {
-    submissions: Submission[];
+    submissions: ExtendedSubmissionType[];
 };
 
 const SubmissionList = ({ submissions, ...props }: SubmissionListProps) => {
