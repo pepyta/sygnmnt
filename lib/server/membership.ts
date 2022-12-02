@@ -38,6 +38,7 @@ export default class Membership {
                                     include: {
                                         files: true,
                                         user: true,
+                                        logs: true,
                                     },
                                     // this large where functions basically filters to all submissions that has been submitted by the user or if the user an owner/auxilliary of the group, then return all
                                     where: {

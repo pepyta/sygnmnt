@@ -1,11 +1,11 @@
 import { BuildRounded, CloseRounded, DoneRounded, HourglassEmptyRounded, PlayArrowRounded } from "@mui/icons-material";
-import { Avatar, CircularProgress, ListItemAvatar, ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText, useTheme } from "@mui/material";
-import { Submission } from "@prisma/client";
+import { Avatar, ListItemAvatar, ListItemButton, ListItemButtonProps, ListItemText, useTheme } from "@mui/material";
+import { ExtendedSubmissionType } from "@redux/slices/membership";
 import { useMemo, useState } from "react";
 import SubmissionDetailsDialog from "./SubmissionDetailsDialog";
 
 export type SubmissionListItemButtonProps = ListItemButtonProps & {
-    submission: Submission;
+    submission: ExtendedSubmissionType;
 };
 
 const SubmissionListItemButton = ({ submission, ...props }: SubmissionListItemButtonProps) => {
@@ -64,6 +64,7 @@ const SubmissionListItemButton = ({ submission, ...props }: SubmissionListItemBu
             />
         </ListItemButton>
         <SubmissionDetailsDialog
+            submission={submission}
             open={isOpen}
             onClose={() => setOpen(false)}
         />

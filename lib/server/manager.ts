@@ -71,6 +71,7 @@ class RunnerManager {
                 onError: async (error) => {
                     await prisma.log.create({
                         data: {
+                            createdAt: new Date(),
                             submission: {
                                 connect: {
                                     id: submission.id,
@@ -85,6 +86,7 @@ class RunnerManager {
                 onLog: async (content) => {
                     await prisma.log.create({
                         data: {
+                            createdAt: new Date(),
                             submission: {
                                 connect: {
                                     id: submission.id,
@@ -111,6 +113,7 @@ class RunnerManager {
                 onError: async (content) => {
                     await prisma.log.create({
                         data: {
+                            createdAt: new Date(),
                             submission: {
                                 connect: {
                                     id: submission.id,
@@ -125,6 +128,7 @@ class RunnerManager {
                 onLog: async (content) => {
                     await prisma.log.create({
                         data: {
+                            createdAt: new Date(),
                             submission: {
                                 connect: {
                                     id: submission.id,

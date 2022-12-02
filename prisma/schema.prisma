@@ -26,7 +26,7 @@ model User {
 // Logs of a submission's run are stored here
 model Log {
   id         String     @id @default(uuid())
-  content    String
+  content    String     @db.MediumText()
   type       LogType
   status     LogStatus
   submission Submission @relation(fields: [submissionId], references: [id])
@@ -98,9 +98,9 @@ model Invitation {
   team      Team     @relation(fields: [teamId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
-  
-  teamId    String
-  userId    String
+
+  teamId String
+  userId String
 
   @@id([userId, teamId])
   @@map("invitations")

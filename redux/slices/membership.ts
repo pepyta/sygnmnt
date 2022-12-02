@@ -1,9 +1,10 @@
-import { File, Membership, Submission, Task, Team, User } from "@prisma/client";
+import { File, Log, Membership, Submission, Task, Team, User } from "@prisma/client";
 import { useAppSelector } from "@redux/hooks";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 export type ExtendedSubmissionType = Submission & {
     files: File[];
+    logs: Log[];
     user: Omit<User, "password">;
 };
 
