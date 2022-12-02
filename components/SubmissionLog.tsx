@@ -1,5 +1,5 @@
 import { ExpandMoreRounded as ExpandMoreIcon } from "@mui/icons-material";
-import { Accordion, AccordionDetails, AccordionProps, AccordionSummary, Grid, Typography, useTheme } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionProps, AccordionSummary, Box, Grid, Typography, useTheme } from "@mui/material";
 import * as Prisma from "@prisma/client";
 import { ExtendedSubmissionType } from "@redux/slices/membership";
 import { useMemo } from "react";
@@ -17,6 +17,7 @@ export type SubmissionLogProps = {
 
 const SubmissionLog = ({ submission, ...props }: SubmissionLogProps) => {
     const theme = useTheme();
+    const logBackground = "rgb(22, 27, 34)";
 
     const sections = useMemo(
         () => {
@@ -49,15 +50,27 @@ const SubmissionLog = ({ submission, ...props }: SubmissionLogProps) => {
     return (
         <>
             {sections.map((section) => (
-                <Accordion key={`submission-log-section-${section}`} disabled={submission.logs.length === 0}>
+                <Accordion key={`submission-log-section-${section}`} disabled={section.logs.length === 0}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography>{section.title}</Typography>
+                        <Typography>{section.title} ({section.logs.length} entries)</Typography>
                     </AccordionSummary>
-                    <AccordionDetails sx={{ overflowX: "auto" }}>
-                        <Grid container sx={{
-                            ...theme.typography.body2,
-                            fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-                        }}>
+                    <AccordionDetails>
+                        <Box sx={{
+                                ...theme.typography.body2,
+                                fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+                                backgroundColor: logBackground,
+                                color: theme.palette.getContrastText(logBackground),
+                                padding: 2,
+                                width: "100%",
+                                overflowX: "auto",
+                                borderRadius: 2,
+                                boxShadow: theme.shadows[5],
+                            }}>
+                        <Grid
+                            container
+                            spacing={1}
+                            
+                        >
                             {section.logs.map((log) => (
                                 <Grid item xs={12} key={`log-entry-${log.id}`}>
                                     <Grid container spacing={1}>
@@ -71,6 +84,8 @@ const SubmissionLog = ({ submission, ...props }: SubmissionLogProps) => {
                                 </Grid>
                             ))}
                         </Grid>
+                        </Box>
+
                     </AccordionDetails>
                 </Accordion>
             ))}
