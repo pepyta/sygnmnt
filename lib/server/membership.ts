@@ -68,6 +68,9 @@ export default class Membership {
                                             }
                                         ]
                                     },
+                                    orderBy: {
+                                        createdAt: "desc",
+                                    },
                                 },
                             },
                         },
