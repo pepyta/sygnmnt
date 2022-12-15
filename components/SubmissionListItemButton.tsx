@@ -2,6 +2,7 @@ import { BuildRounded, CloseRounded, DoneRounded, HourglassEmptyRounded, PlayArr
 import { Avatar, CircularProgress, ListItemAvatar, ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText, useTheme } from "@mui/material";
 import { Submission } from "@prisma/client";
 import { useMemo, useState } from "react";
+import SubmissionDetailsDialog from "./SubmissionDetailsDialog";
 
 export type SubmissionListItemButtonProps = ListItemButtonProps & {
     submission: Submission;
@@ -50,7 +51,9 @@ const SubmissionListItemButton = ({ submission, ...props }: SubmissionListItemBu
     );
 
     return (
-        <ListItemButton {...props}>
+        <>
+
+        <ListItemButton onClick={() => setOpen(true)} {...props}>
             <ListItemAvatar>
                 <Avatar sx={{ backgroundColor: color }}>
                     <Component />
@@ -60,6 +63,11 @@ const SubmissionListItemButton = ({ submission, ...props }: SubmissionListItemBu
                 primary={`Submitted at ${date}`}
             />
         </ListItemButton>
+        <SubmissionDetailsDialog
+            open={isOpen}
+            onClose={() => setOpen(false)}
+        />
+        </>
     );
 };
 

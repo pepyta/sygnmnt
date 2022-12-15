@@ -1,20 +1,16 @@
 import { List, ListProps } from "@mui/material"
-import { File, Task, Team } from "@prisma/client";
+import { ExtendedMembershipType } from "@redux/slices/membership";
 import TaskListItemButton from "./TaskListItemButton";
 
 export type TaskListProps = ListProps & {
-    tasks: (Task & {
-        files: File[];
-    })[];
-    team: Team;
+    membership: ExtendedMembershipType;
 };
 
-const TaskList = ({ tasks, team, ...props }: TaskListProps) => {
+const TaskList = ({ membership, ...props }: TaskListProps) => {    
     return (
         <List {...props}>
-            {tasks.map((task) => (
+            {membership.team.tasks.map((task) => (
                 <TaskListItemButton
-                    team={team}
                     task={task}
                     key={`task-item-button-${task.id}`}
                 />

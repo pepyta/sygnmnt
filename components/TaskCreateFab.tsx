@@ -6,10 +6,9 @@ import TaskCreateDialog from "./TaskCreateDialog";
 
 export type TaskCreateFabProps = FabProps & {
     team: Team;
-    onCreate: (task: Task) => void;
 };
 
-const TaskCreateFab = ({ team, onCreate, ...props }: TaskCreateFabProps) => {
+const TaskCreateFab = ({ team, ...props }: TaskCreateFabProps) => {
     const [isOpen, setOpen] = useState(false);
 
     return (
@@ -23,7 +22,6 @@ const TaskCreateFab = ({ team, onCreate, ...props }: TaskCreateFabProps) => {
             </Fab>
             <TaskCreateDialog
                 open={isOpen}
-                onCreate={onCreate}
                 onClose={() => setOpen(false)}
                 team={team}
             />

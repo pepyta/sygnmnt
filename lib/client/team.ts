@@ -2,36 +2,9 @@ import { GetTeamByIdResponseType } from "@lib/server/team";
 import { Team as PrismaTeam } from "@prisma/client";
 import Authentication from "./auth";
 import RootApiHandler from "./fetch";
+import Membership from "./membership";
 
 const Team = {
-    getByID: async (id: string) => {
-        const resp: GetTeamByIdResponseType = await RootApiHandler.fetch(`/api/team/${id}`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${Authentication.getAccessToken()}`,
-            },
-        });
-        
-        return resp;
-    },
-    
-    getAll: async () => {
-        type ResponseType = {
-            teams: PrismaTeam[];
-        };
-
-        const { teams }: ResponseType = await RootApiHandler.fetch("/api/team", {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${Authentication.getAccessToken()}`,
-            },
-        });
-
-        return {
-            teams,
-        };
-    },
-
     update: async (teamId: string, name: string) => {
         type ResponseType = {
             message: string;
@@ -47,6 +20,8 @@ const Team = {
                 "Authorization": `Bearer ${Authentication.getAccessToken()}`,
             },
         });
+
+        await Membership.getAll();
 
         return {
             team,
@@ -69,6 +44,8 @@ const Team = {
                 "Authorization": `Bearer ${Authentication.getAccessToken()}`,
             },
         });
+        
+        await Membership.getAll();
 
         return {
             team,

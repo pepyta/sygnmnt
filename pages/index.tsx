@@ -1,3 +1,4 @@
+import InvitationCard from "@components/InvitationCard";
 import TeamCreateButton from "@components/TeamCreateButton";
 import TeamList from "@components/TeamList";
 import { useAuth, useUser } from "@components/UserProvider";
@@ -59,7 +60,6 @@ const HomePage = () => {
                     </Card>
                 </Grid>
                 <Grid item xs={12}>
-
                     <Card>
                         <CardContent sx={{ pb: 0 }}>
                             <Typography variant={"h5"} gutterBottom>
@@ -68,6 +68,9 @@ const HomePage = () => {
                         </CardContent>
                         <TeamList />
                     </Card>
+                </Grid>
+                <Grid item xs={12}>
+                    <InvitationCard />
                 </Grid>
             </Grid>
             <TeamCreateButton

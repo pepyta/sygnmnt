@@ -67,10 +67,35 @@ class RunnerManager {
                 },
             });
 
-            // todo: attach logger functions
             await runner.build({
-                onError: console.warn,
-                onLog: console.info,
+                onError: async (error) => {
+                    await prisma.log.create({
+                        data: {
+                            submission: {
+                                connect: {
+                                    id: submission.id,
+                                },
+                            },
+                            content: error,
+                            type: "ERROR",
+                            status: "BUILDING",
+                        },
+                    });
+                },
+                onLog: async (content) => {
+                    await prisma.log.create({
+                        data: {
+                            submission: {
+                                connect: {
+                                    id: submission.id,
+                                },
+                            },
+                            content,
+                            type: "STANDARD",
+                            status: "BUILDING",
+                        },
+                    });
+                },
             });
 
             await prisma.submission.update({
@@ -82,10 +107,35 @@ class RunnerManager {
                 },
             });
 
-            // todo: attach logger functions
             const exitCode = await runner.run({
-                onError: console.warn,
-                onLog: console.info,
+                onError: async (content) => {
+                    await prisma.log.create({
+                        data: {
+                            submission: {
+                                connect: {
+                                    id: submission.id,
+                                },
+                            },
+                            content,
+                            type: "ERROR",
+                            status: "RUNNING",
+                        },
+                    });
+                },
+                onLog: async (content) => {
+                    await prisma.log.create({
+                        data: {
+                            submission: {
+                                connect: {
+                                    id: submission.id,
+                                },
+                            },
+                            content,
+                            type: "STANDARD",
+                            status: "RUNNING",
+                        },
+                    });
+                },
             });
 
             await prisma.submission.update({

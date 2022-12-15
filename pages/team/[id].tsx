@@ -1,15 +1,16 @@
 import TaskCreateFab from "@components/TaskCreateFab";
 import TaskList from "@components/TaskList";
 import { useUser } from "@components/UserProvider";
-import Team from "@lib/client/team";
 import { useMount } from "@lib/client/useMount";
 import { LoadingButton } from "@mui/lab";
 import { Card, CardContent, Container, Grid, Typography } from "@mui/material";
-import { File, Task as PrismaTask } from "@prisma/client";
 import NextLink from "next/link";
-import { useState } from "react";
-import Task from "@lib/client/task";
-import { GetTeamByIdResponseType } from "@lib/server/team";
+import { useMemo, useState } from "react";
+import MemberCard from "@components/MemberCard";
+import Membership from "@lib/client/membership";
+import { TeamNotFoundError } from "@lib/server/errors";
+import { useMemberships } from "@redux/slices/membership";
+import TaskCard from "@components/TaskCard";
 
 export type TeamPageProps = {
     id: string;
@@ -17,28 +18,24 @@ export type TeamPageProps = {
 
 const TeamPage = ({ id }: TeamPageProps) => {
     const { user } = useUser();
-    const [isLoading, setLoading] = useState(true);
     const [error, setError] = useState<Error>();
-    const [team, setTeam] = useState<GetTeamByIdResponseType>();
-    const [tasks, setTasks] = useState<(PrismaTask & { files: File[] })[]>();
+    const { memberships, isLoading } = useMemberships();
+
+    const membership = useMemo(
+        () => memberships.find((membership) => membership.team.id === id),
+        [memberships, id],
+    );
     
     const load = async () => {
-        setLoading(true);
-
         try {
-            const [team, tasks] = await Promise.all([
-                Team.getByID(id),
-                Task.getAll(id),
-            ]);
-
-            setTeam(team);
-            setTasks(tasks);
+            const memberships = await Membership.getAll();
+            if(!memberships.some((membership) => membership.team.id === id)) {
+                throw new TeamNotFoundError();
+            }
 
             setError(null);
         } catch(e) {
             setError(e);
-        } finally {
-            setLoading(false);
         }
     };
     
@@ -80,7 +77,7 @@ const TeamPage = ({ id }: TeamPageProps) => {
         );
     }
     
-    if(isLoading) {
+    if(!membership) {
         return (
             <Typography>
                 {"Loading team's data..."}
@@ -90,23 +87,18 @@ const TeamPage = ({ id }: TeamPageProps) => {
     
     return (
         <Container maxWidth={"sm"} sx={{ pt: 2, pb: 2}}>
-            <Card>
-                <CardContent sx={{ pb: 0 }}>
-                    <Typography variant={"h5"}>
-                        Tasks
-                    </Typography>
-                </CardContent>
-                <TaskList
-                    tasks={tasks}
-                    team={team}
-                />
-            </Card>
-            <TaskCreateFab
-                sx={{ position: "fixed", bottom: 0, right: 0, m: 4 }}
-                color={"primary"}
-                team={team}
-                onCreate={load}
-            />
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <TaskCard
+                        membership={membership}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <MemberCard
+                        team={membership.team}
+                    />
+                </Grid>
+            </Grid>
         </Container>
     );
 };

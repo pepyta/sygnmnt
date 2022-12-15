@@ -1,8 +1,9 @@
-import Team from "@lib/client/team";
+import Membership from "@lib/client/membership";
 import { GroupRemoveRounded as NoTeamIcon } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Avatar, Grid, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, ListProps, Typography } from "@mui/material";
 import { Team as PrismaTeam } from "@prisma/client";
+import { useMemberships } from "@redux/slices/membership";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -10,22 +11,15 @@ export type TeamListProps = ListProps;
 
 const TeamList = (props: TeamListProps) => {
     const router = useRouter();
-    
-    const [isLoading, setLoading] = useState(true);
+    const { memberships, isLoading } = useMemberships();
     const [error, setError] = useState<Error>();
-    const [teams, setTeams] = useState<PrismaTeam[]>();
 
     const load = async () => {
-        setLoading(true);
-
         try {
-            const { teams } = await Team.getAll();
-            setTeams(teams);
+            await Membership.getAll();
             setError(null);
         } catch(e) {
             setError(e);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -71,7 +65,7 @@ const TeamList = (props: TeamListProps) => {
 
     return (
         <List {...props}>
-            {teams.length === 0 ? (
+            {memberships.length === 0 ? (
                 <ListItem>
                     <ListItemIcon>
                         <NoTeamIcon />
@@ -80,7 +74,7 @@ const TeamList = (props: TeamListProps) => {
                         {"You haven't created a single team yet."}
                     </ListItemText>
                 </ListItem>
-            ) : teams.map((team) => (
+            ) : memberships.map(({ team }) => (
                 <ListItemButton
                     key={`list-team-button-${team.id}`}
                     onClick={() => openTeam(team)}

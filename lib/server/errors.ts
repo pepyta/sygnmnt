@@ -39,3 +39,21 @@ export class MethodNotImplementedError extends Error {
         super("This method is not implemented yet! Check back later.");
     }
 }
+
+export class AlreadyMemberError extends Error {
+    constructor() {
+        super("The person that you want to invite is already a member of the group.");
+    }
+}
+
+export class InvitationNotFoundError extends Error {
+    constructor() {
+        super("Could not find the invitation that you want to accept or reject.");
+    }
+}
+
+export class TeamNotFoundError extends Error {
+    constructor() {
+        super("Team not found.");
+    }
+}
