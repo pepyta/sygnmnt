@@ -39,5 +39,16 @@ describe("task creation and management", () => {
         expect(tasks[0].description).toBe(description);
         expect(tasks[0].language).toBe(language);
     });
+
+    test('should delete task', async () => {
+        const tasks = await Task.getAll(team);
+        expect(tasks.length).toBe(1);
+        expect(await Task.delete(tasks[0])).toBeTruthy();
+    });
+
+    test('should not have any tasks', async () => {
+        const tasks = await Task.getAll(team);
+        expect(tasks.length).toBe(0);
+    });
 });
 

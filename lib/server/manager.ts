@@ -71,6 +71,7 @@ class RunnerManager {
                 onError: async (error) => {
                     await prisma.log.create({
                         data: {
+                            createdAt: new Date(),
                             submission: {
                                 connect: {
                                     id: submission.id,
@@ -85,6 +86,7 @@ class RunnerManager {
                 onLog: async (content) => {
                     await prisma.log.create({
                         data: {
+                            createdAt: new Date(),
                             submission: {
                                 connect: {
                                     id: submission.id,
@@ -111,6 +113,7 @@ class RunnerManager {
                 onError: async (content) => {
                     await prisma.log.create({
                         data: {
+                            createdAt: new Date(),
                             submission: {
                                 connect: {
                                     id: submission.id,
@@ -125,6 +128,7 @@ class RunnerManager {
                 onLog: async (content) => {
                     await prisma.log.create({
                         data: {
+                            createdAt: new Date(),
                             submission: {
                                 connect: {
                                     id: submission.id,
@@ -143,13 +147,11 @@ class RunnerManager {
                     id: submission.id,
                 },
                 data: {
-                    status: exitCode === 0 ? "PASSED" : "FAILED",
+                    status: exitCode !== 0 ? "FAILED"
+                        : task.needsVerification ? "AWAITING_MANUAL_CHECK" : "PASSED",
                 },
             });
         } catch(e) {
-            // todo: handle errors that can occour at any given time
-            console.error(e);
-
             await prisma.submission.update({
                 where: {
                     id: submission.id,

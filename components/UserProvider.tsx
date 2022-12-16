@@ -1,8 +1,9 @@
 import { User } from "@prisma/client";
-import { createContext, PropsWithChildren, useContext, useState } from "react";
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
 import decode from "jwt-decode";
 import Authentication from "@lib/client/auth";
 import { useMount } from "@lib/client/useMount";
+import Membership from "@lib/client/membership";
 
 export type UserProviderProps = PropsWithChildren<{}>;
 
@@ -57,6 +58,20 @@ const UserProvider = (props: UserProviderProps) => {
 
         setLoading(false);
     });
+
+    const sync = async () => {
+        if(!user) return;
+        await Membership.getAll();
+        await new Promise(r => setTimeout(r, 1000));
+        return await sync();
+    };
+
+    useEffect(
+        () => {
+            sync();
+        },
+        [user],
+    );
     
     if(isLoading) {
         return (

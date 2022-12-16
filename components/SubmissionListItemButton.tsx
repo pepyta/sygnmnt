@@ -1,11 +1,12 @@
 import { BuildRounded, CloseRounded, DoneRounded, HourglassEmptyRounded, PlayArrowRounded } from "@mui/icons-material";
-import { Avatar, CircularProgress, ListItemAvatar, ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText, useTheme } from "@mui/material";
-import { Submission } from "@prisma/client";
+import { Avatar, ListItemAvatar, ListItemButton, ListItemButtonProps, ListItemText, useTheme } from "@mui/material";
+import { ExtendedSubmissionType } from "@redux/slices/membership";
 import { useMemo, useState } from "react";
 import SubmissionDetailsDialog from "./SubmissionDetailsDialog";
+import SubmissionStatusIndicator from "./SubmissionStatusIndicator";
 
 export type SubmissionListItemButtonProps = ListItemButtonProps & {
-    submission: Submission;
+    submission: ExtendedSubmissionType;
 };
 
 const SubmissionListItemButton = ({ submission, ...props }: SubmissionListItemButtonProps) => {
@@ -20,53 +21,23 @@ const SubmissionListItemButton = ({ submission, ...props }: SubmissionListItemBu
         [submission.createdAt],
     );
 
-    const { Component, color } = useMemo(
-        () => {
-            const map = {
-                PASSED: {
-                    Component: DoneRounded,
-                    color: theme.palette.success.main,
-                },
-                FAILED: {
-                    Component: CloseRounded,
-                    color: theme.palette.error.main,
-                },
-                BUILDING: {
-                    Component: BuildRounded,
-                    color: theme.palette.primary.main,
-                },
-                RUNNING: {
-                    Component: PlayArrowRounded,
-                    color: theme.palette.primary.main,
-                },
-                WAITING: {
-                    Component: HourglassEmptyRounded,
-                    color: theme.palette.secondary.main,
-                },
-            };
-
-            return map[submission.status];
-        },
-        [submission.status, theme],
-    );
-
     return (
         <>
-
-        <ListItemButton onClick={() => setOpen(true)} {...props}>
-            <ListItemAvatar>
-                <Avatar sx={{ backgroundColor: color }}>
-                    <Component />
-                </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-                primary={`Submitted at ${date}`}
+            <ListItemButton onClick={() => setOpen(true)} {...props}>
+                <ListItemAvatar>
+                    <SubmissionStatusIndicator
+                        submission={submission}
+                    />
+                </ListItemAvatar>
+                <ListItemText
+                    primary={`Submitted at ${date}`}
+                />
+            </ListItemButton>
+            <SubmissionDetailsDialog
+                submission={submission}
+                open={isOpen}
+                onClose={() => setOpen(false)}
             />
-        </ListItemButton>
-        <SubmissionDetailsDialog
-            open={isOpen}
-            onClose={() => setOpen(false)}
-        />
         </>
     );
 };
