@@ -5,6 +5,7 @@ import Team from '@lib/server/team';
 import { randomUUID } from 'crypto';
 import * as Prisma from "@prisma/client";
 import Invitation from '@lib/server/invitation';
+import { AlreadyMemberError, InvitationNotFoundError } from '@lib/server/errors';
 
 describe("Test what happens when user rejects an invitation", () => {
     let owner: Prisma.User;
@@ -46,6 +47,12 @@ describe("Test what happens when user rejects an invitation", () => {
 
     test('should reject the invitation', async () => {
         expect(await Invitation.rejectInvitation(member, team)).toBeTruthy();
+    });
+
+    test('should not be able to accept after rejection', async () => {
+        expect(() => Invitation.acceptInvitation(member, team))
+            .rejects
+            .toThrow(new InvitationNotFoundError());
     });
 
     test('should not have any invitation again', async () => {
@@ -115,5 +122,11 @@ describe("Test what happens when user accepts an invitation", () => {
     test('should have member role in the group', async () => {
         const membership = await Membership.getByTeamId(member, team.id);
         expect(membership.role).toBe("MEMBER");
+    });
+
+    test('should note be able to invite again', async () => {
+        expect(() => Invitation.inviteUser(team, member))
+            .rejects
+            .toThrow(new AlreadyMemberError());
     });
 });

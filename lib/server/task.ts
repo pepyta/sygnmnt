@@ -58,28 +58,6 @@ export default class Task {
         });
     }
 
-    public static async edit(task: Prisma.Task, { files, ...data }) {
-        await prisma.file.deleteMany({
-            where: {
-                taskId: task.id,
-            },
-        });
-
-        return await prisma.task.update({
-            where: {
-                id: task.id,
-            },
-            data: {
-                ...data,
-                files: {
-                    createMany: {
-                        data: files,
-                    },
-                },
-            },
-        });
-    }
-
     public static async getById(id: string) {
         return await prisma.task.findUnique({
             where: {
