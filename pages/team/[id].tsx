@@ -11,6 +11,7 @@ import Membership from "@lib/client/membership";
 import { TeamNotFoundError } from "@lib/server/errors";
 import { useMemberships } from "@redux/slices/membership";
 import TaskCard from "@components/TaskCard";
+import { useRouter } from "next/router";
 
 export type TeamPageProps = {
     id: string;
@@ -20,6 +21,7 @@ const TeamPage = ({ id }: TeamPageProps) => {
     const { user } = useUser();
     const [error, setError] = useState<Error>();
     const { memberships, isLoading } = useMemberships();
+    const router = useRouter();
 
     const membership = useMemo(
         () => memberships.find((membership) => membership.team.id === id),
@@ -78,6 +80,10 @@ const TeamPage = ({ id }: TeamPageProps) => {
     }
     
     if(!membership) {
+        if(!isLoading) {
+            router.push("/");
+        }
+
         return (
             <Typography>
                 {"Loading team's data..."}

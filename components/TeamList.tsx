@@ -55,7 +55,7 @@ const TeamList = (props: TeamListProps) => {
         );
     }
 
-    if(isLoading) {
+    if(!memberships && isLoading) {
         return (
             <Typography>
                 Loading teams...

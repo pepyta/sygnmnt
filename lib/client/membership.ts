@@ -2,6 +2,7 @@ import { ExtendedMembershipType, MembershipActions } from "@redux/slices/members
 import store from "@redux/store";
 import Authentication from "./auth";
 import RootApiHandler from "./fetch";
+import * as Prisma from "@prisma/client";
 
 const Membership = {
     getAll: async (): Promise<ExtendedMembershipType[]> => {
@@ -22,6 +23,35 @@ const Membership = {
             store.dispatch(MembershipActions.setLoading(false));
             throw e;
         }
+    },
+
+    kick: async (teamId: string, userId: string) => {
+        const response = await RootApiHandler.fetch(`/api/team/${teamId}/membership/${userId}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${Authentication.getAccessToken()}`,
+            },
+        });
+
+        await Membership.getAll();
+
+        return response;
+    },
+
+    edit: async (teamId: string, userId: string, role: Prisma.Role) => {
+        const response = await RootApiHandler.fetch(`/api/team/${teamId}/membership/${userId}`, {
+            method: "PATCH",
+            body: JSON.stringify({
+                role,
+            }),
+            headers: {
+                "Authorization": `Bearer ${Authentication.getAccessToken()}`,
+            },
+        });
+
+        await Membership.getAll();
+
+        return response;
     },
 };
 
