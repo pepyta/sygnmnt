@@ -15,6 +15,6 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build Docker image
-      run: docker build . --tag ghcr.io/pepyta/sygnmnt:latest --build-arg JWT_SECRET_KEY=supersecret123 --build-arg DATABASE_URL=mysql://root:mysql_password@database:3306/sygnmnt
+      run: docker build . --tag ghcr.io/pepyta/sygnmnt:latest --tag ghcr.io/pepyta/sygnmnt:$(node -p "require('./package.json').version") --build-arg JWT_SECRET_KEY=supersecret123 --build-arg DATABASE_URL=mysql://root:mysql_password@database:3306/sygnmnt
     - name: Publish Docker image
       run: docker push ghcr.io/pepyta/sygnmnt:latest
