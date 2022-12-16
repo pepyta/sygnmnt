@@ -24,10 +24,10 @@ model User {
 // Logs of a submission's run are stored here
 model Log {
   id         String     @id @default(uuid())
-  content    String
+  content    String     @db.MediumText()
   type       LogType
   status     LogStatus
-  submission Submission @relation(fields: [submissionId], references: [id])
+  submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
   createdAt  DateTime   @default(now())
 
   submissionId String
@@ -37,15 +37,16 @@ model Log {
 
 // A task can be created by an owner or an auxillary
 model Task {
-  id          String              @id @default(uuid())
-  name        String
-  description String
-  language    ProgrammingLanguage
-  submissions Submission[]
-  team        Team                @relation(fields: [teamId], references: [id])
-  files       File[]
-  createdAt   DateTime            @default(now())
-  dueAt       DateTime?
+  id                String              @id @default(uuid())
+  name              String
+  description       String
+  language          ProgrammingLanguage
+  submissions       Submission[]
+  team              Team                @relation(fields: [teamId], references: [id])
+  files             File[]
+  createdAt         DateTime            @default(now())
+  dueAt             DateTime?
+  needsVerification Boolean             @default(false)
 
   teamId String
 
@@ -57,7 +58,7 @@ model Task {
 model Submission {
   id        String           @id @default(uuid())
   status    SubmissionStatus @default(WAITING)
-  task      Task             @relation(fields: [taskId], references: [id])
+  task      Task             @relation(fields: [taskId], references: [id], onDelete: Cascade)
   user      User             @relation(fields: [userId], references: [id])
   files     File[]
   logs      Log[]
@@ -74,9 +75,9 @@ model File {
   id           String      @id @default(uuid())
   name         String
   content      String      @db.LongText()
-  Task         Task?       @relation(fields: [taskId], references: [id])
+  Task         Task?       @relation(fields: [taskId], references: [id], onDelete: Cascade)
   taskId       String?
-  Submission   Submission? @relation(fields: [submissionId], references: [id])
+  submission   Submission? @relation(fields: [submissionId], references: [id], onDelete: Cascade)
   submissionId String?
 
   @@map("files")
@@ -96,9 +97,9 @@ model Invitation {
   team      Team     @relation(fields: [teamId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
-  
-  teamId    String
-  userId    String
+
+  teamId String
+  userId String
 
   @@id([userId, teamId])
   @@map("invitations")
@@ -126,6 +127,7 @@ enum SubmissionStatus {
   WAITING
   BUILDING
   RUNNING
+  AWAITING_MANUAL_CHECK
   FAILED
   PASSED
 }

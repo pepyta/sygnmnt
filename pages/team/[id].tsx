@@ -89,6 +89,14 @@ const TeamPage = ({ id }: TeamPageProps) => {
         <Container maxWidth={"sm"} sx={{ pt: 2, pb: 2}}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
+                    <Typography variant={"h5"}>
+                        {membership.team.name}
+                    </Typography>
+                    <Typography>
+                        {`Role: ${membership.role}`}
+                    </Typography>
+                </Grid>
+                <Grid item xs={12}>
                     <TaskCard
                         membership={membership}
                     />

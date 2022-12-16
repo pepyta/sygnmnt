@@ -1,17 +1,23 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, Grid, Typography } from "@mui/material";
-import { File, Task, Team } from "@prisma/client";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogProps, Grid, ListSubheader, Tab, Typography } from "@mui/material";
 import { ExtendedTaskType, useMemberships } from "@redux/slices/membership";
 import { useMemo, useState } from "react";
+import CloseButton from "./CloseButton";
+import FolderForm from "./FolderForm";
 import SubmissionCreateDialog from "./SubmissionCreateDialog";
-import SubmissionListDialog from "./SubmissionListDialog";
+import SubmissionList from "./SubmissionList";
+import TaskDeleteDialog from "./TaskDeleteDialog";
 
 export type TaskDetailsDialogProps = DialogProps & {
-    task:  ExtendedTaskType;
+    task: ExtendedTaskType;
 };
 
+type TabType = "DESCRIPTION" | "FILES" | "OPTIONS";
+
 const TaskDetailsDialog = ({ task, ...props }: TaskDetailsDialogProps) => {
+    const [tab, setTab] = useState<TabType>("DESCRIPTION");
     const [isCreateOpen, setCreateOpen] = useState(false);
-    const [isListOpen, setListOpen] = useState(false);
+    const [isDeleteOpen, setDeleteOpen] = useState(false);
 
     const { memberships } = useMemberships();
     const membership = useMemo(
@@ -19,9 +25,8 @@ const TaskDetailsDialog = ({ task, ...props }: TaskDetailsDialogProps) => {
         [memberships, task],
     );
 
-    
-    const openListDialog = () => setListOpen(true);
-    const openCreateDialog = () => setCreateOpen(true);
+
+    const openDeleteDialog = () => setDeleteOpen(true);
 
     return (
         <>
@@ -30,42 +35,84 @@ const TaskDetailsDialog = ({ task, ...props }: TaskDetailsDialogProps) => {
                 open={isCreateOpen}
                 onClose={() => setCreateOpen(false)}
             />
-            <SubmissionListDialog
+            <TaskDeleteDialog
                 task={task}
-                open={isListOpen}
-                onClose={() => setListOpen(false)}
+                open={isDeleteOpen}
+                onClose={() => setDeleteOpen(false)}
             />
-            <Dialog fullWidth maxWidth={"sm"} {...props}>
+            <Dialog fullWidth maxWidth={"md"} {...props}>
                 <DialogContent>
-                    <Grid container spacing={1}>
-                        <Grid item xs={12}>
-                            <Typography variant={"h6"}>
-                                Task details
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <DialogContentText>
-                                {task.description}
-                            </DialogContentText>
-                        </Grid>
-                        {membership.role === "MEMBER" && (
-                            <Grid item xs={12}>
-                                <Button variant="contained" fullWidth onClick={openCreateDialog}>
-                                    Submit solution
-                                </Button>
-                            </Grid>
-                        )}
-                        <Grid item xs={12}>
-                            <Button variant={"outlined"} fullWidth onClick={openListDialog}>
-                                List submissions
-                            </Button>
-                        </Grid>
-                    </Grid>
+                    <Typography variant={"h6"}>
+                        {task.name}
+                    </Typography>
+                    <Typography variant={"body2"}>
+                        {`Created at: ${new Date(task.createdAt).toLocaleString()}`}
+                    </Typography>
                 </DialogContent>
+                <TabContext value={tab}>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <TabList onChange={(_, value) => setTab(value)} aria-label="lab API tabs example">
+                            <Tab label={"Description"} value={"DESCRIPTION"} />
+                            <Tab label={"Files"} value={"FILES"} />
+                            <Tab label={"Submissions"} value={"SUBMISSIONS"} />
+                            {(membership.role === "OWNER" || membership.role === "AUXILIARY") && (
+                                <Tab label={"Options"} value={"OPTIONS"} />
+                            )}
+                        </TabList>
+                    </Box>
+                    <TabPanel value={"DESCRIPTION"}>
+                        {task.description}
+                    </TabPanel>
+                    <TabPanel value={"FILES"}>
+                        <FolderForm
+                            disabled
+                            files={task.files}
+                        />
+                    </TabPanel>
+                    <TabPanel value={"SUBMISSIONS"} sx={{ padding: 0 }}>
+                        {membership.role === "MEMBER" ? (
+                            <Grid container>
+                                <Grid item xs={12}>
+                                    <Box sx={{ m: 2 }}>
+                                        <Button fullWidth variant="contained" onClick={() => setCreateOpen(true)}>
+                                            Submit solution
+                                        </Button>
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <SubmissionList
+                                        submissions={task.submissions}
+                                    />
+                                </Grid>
+                            </Grid>
+                        ) : (
+                            membership.team.memberships
+                                .filter((membership) => membership.role === "MEMBER")
+                                .map((membership) => (
+                                    <SubmissionList
+                                        subheader={(
+                                            <ListSubheader>
+                                                {membership.user.username}
+                                            </ListSubheader>
+                                        )}
+                                        key={`submission-list-${membership.userId}`}
+                                        submissions={task.submissions.filter(
+                                            (submission) => submission.userId === membership.userId)
+                                        }
+                                    />
+                                ))
+                        )}
+                    </TabPanel>
+                    <TabPanel value={"OPTIONS"}>
+                        <Button color={"error"} variant="contained" fullWidth onClick={openDeleteDialog}>
+                            Delete task
+                        </Button>
+                    </TabPanel>
+                </TabContext>
                 <DialogActions>
-                    <Button onClick={() => props.onClose({}, "escapeKeyDown")}>
-                        Close
-                    </Button>
+                    <CloseButton
+                        onClick={() => props.onClose({}, "escapeKeyDown")}
+                    />
                 </DialogActions>
             </Dialog>
         </>
