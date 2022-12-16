@@ -6,8 +6,6 @@ services:
       - 3000:3000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      - database
 
   database:
     image: mysql
