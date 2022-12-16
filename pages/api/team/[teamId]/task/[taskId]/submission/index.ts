@@ -5,7 +5,6 @@ import Membership from "@lib/server/membership";
 import { middleware } from "@lib/server/middleware";
 import Submission from "@lib/server/submission";
 import Task from "@lib/server/task";
-import { Submission as PrismaSubmission } from "@prisma/client";
 import { NextApiRequest } from "next";
 
 const createSubmission = async (req: NextApiRequest) => {

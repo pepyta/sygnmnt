@@ -29,7 +29,7 @@ model Log {
   content    String     @db.MediumText()
   type       LogType
   status     LogStatus
-  submission Submission @relation(fields: [submissionId], references: [id])
+  submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
   createdAt  DateTime   @default(now())
 
   submissionId String
@@ -79,7 +79,7 @@ model File {
   content      String      @db.LongText()
   Task         Task?       @relation(fields: [taskId], references: [id])
   taskId       String?
-  Submission   Submission? @relation(fields: [submissionId], references: [id])
+  submission   Submission? @relation(fields: [submissionId], references: [id], onDelete: Cascade)
   submissionId String?
 
   @@map("files")
