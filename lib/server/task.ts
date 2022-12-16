@@ -1,4 +1,4 @@
-import { ProgrammingLanguage, Team as PrismaTeam } from "@prisma/client";
+import * as Prisma from "@prisma/client";
 import prisma from "./prisma";
 import { RunnerFile } from "./runner";
 
@@ -11,7 +11,7 @@ export default class Task {
      * @param language The language of the task.
      * @returns A task that has been created.
      */
-    public static async create(team: PrismaTeam, name: string, description: string, language: ProgrammingLanguage, files: RunnerFile[]) {
+    public static async create(team: Prisma.Team, name: string, description: string, language: Prisma.ProgrammingLanguage, files: RunnerFile[]) {
         return await prisma.task.create({
             data: {
                 team: {
@@ -36,7 +36,7 @@ export default class Task {
      * @param team The team that we want to get the tasks for.
      * @returns An array of tasks.
      */
-    public static async getAll(team: PrismaTeam) {
+    public static async getAll(team: Prisma.Team) {
         return await prisma.task.findMany({
             where: {
                 teamId: team.id,
@@ -46,6 +46,36 @@ export default class Task {
             },
             orderBy: {
                 createdAt: "desc",
+            },
+        });
+    }
+
+    public static async delete(task: Prisma.Task) {
+        return await prisma.task.delete({
+            where: {
+                id: task.id,
+            },
+        });
+    }
+
+    public static async edit(task: Prisma.Task, { files, ...data }) {
+        await prisma.file.deleteMany({
+            where: {
+                taskId: task.id,
+            },
+        });
+
+        return await prisma.task.update({
+            where: {
+                id: task.id,
+            },
+            data: {
+                ...data,
+                files: {
+                    createMany: {
+                        data: files,
+                    },
+                },
             },
         });
     }
