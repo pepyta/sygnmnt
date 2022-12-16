@@ -38,6 +38,10 @@ describe("Test what happens when user rejects an invitation", () => {
         expect(await Invitation.inviteUser(team, member)).toBeTruthy();
     });
 
+    test('should note be able to invite again', async () => {
+        expect(() => Invitation.inviteUser(team, member)).toThrow();
+    });
+
     test('should have the invitation when querying', async () => {
         const invitations = await Invitation.getAll(member);
         expect(invitations.length).toBe(1);
