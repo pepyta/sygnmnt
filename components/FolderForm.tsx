@@ -13,10 +13,11 @@ const CodeEditor = dynamic(
 );
 
 export type FolderFormProps = {
+    disabled?: boolean;
     files: (RunnerFile & {
         disabled?: boolean;
     })[];
-    onEdit: (files: RunnerFile[]) => void;
+    onEdit?: (files: RunnerFile[]) => void;
 };
 
 type FolderType = {
@@ -45,7 +46,7 @@ type ContextMenuType = {
         }
     );
 
-const FolderForm = ({ files, onEdit, ...props }: FolderFormProps) => {
+const FolderForm = ({ files, onEdit, disabled, ...props }: FolderFormProps) => {
     const [isOpen, setOpen] = useState(false);
     const [selectedPath, setSelectedPath] = useState("");
     const theme = useTheme();
@@ -56,8 +57,6 @@ const FolderForm = ({ files, onEdit, ...props }: FolderFormProps) => {
         () => files.find((file) => file.name === selectedPath),
         [selectedPath, files],
     );
-
-    console.log(files);
 
     const directory = useMemo(
         () => {
@@ -114,31 +113,37 @@ const FolderForm = ({ files, onEdit, ...props }: FolderFormProps) => {
     );
 
     const changeFile = (content: string) => {
-        onEdit([...files].map((file) => ({
-            ...file,
-            content: file.name === selectedPath ? content : file.content
-        })));
+        if(onEdit) {
+            onEdit([...files].map((file) => ({
+                ...file,
+                content: file.name === selectedPath ? content : file.content
+            })));
+        }
     };
 
     const createFile = (name: string) => {
-        const filename = name.startsWith("/") ? name.substring(1) : name;
-        onEdit([...files, {
-            name: filename,
-            content: "",
-        }]);
+        if(onEdit) {
+            const filename = name.startsWith("/") ? name.substring(1) : name;
+            onEdit([...files, {
+                name: filename,
+                content: "",
+            }]);
+        }
     };
 
     const deleteFile = (path: string) => {
-        setContextMenu(null);
-        console.log(path);
-        const newFiles = [...files].filter((file) => file.name !== path);
-        onEdit(newFiles);
+        if(onEdit) {
+            setContextMenu(null);
+            const newFiles = [...files].filter((file) => file.name !== path);
+            onEdit(newFiles);    
+        }
     };
 
     const deleteFolder = (path: string) => {
-        console.log(path);
-        setContextMenu(null);
-        onEdit([...files].filter((file) => !("/" + file.name).startsWith(path)));
+        if(onEdit) {
+            setContextMenu(null);
+            onEdit([...files].filter((file) => !("/" + file.name).startsWith(path)));
+        }
     };
 
     const renderFolder = (folder: FolderType) => {
@@ -228,14 +233,16 @@ const FolderForm = ({ files, onEdit, ...props }: FolderFormProps) => {
                 onCreate={createFile}
             />
             <Grid item xs={12} md={4}>
-                <Button
-                    variant={"outlined"}
-                    fullWidth
-                    onClick={() => setOpen(true)}
-                    sx={{ mb: 1 }}
-                >
-                    Create new file
-                </Button>
+                {!disabled && (
+                    <Button
+                        variant={"outlined"}
+                        fullWidth
+                        onClick={() => setOpen(true)}
+                        sx={{ mb: 1 }}
+                    >
+                        Create new file
+                    </Button>
+                )}
                 {files.length > 0 ? (
                     <TreeView sx={{ borderRadius: theme.shape.borderRadius }}>
                         {directory.folders.map(renderFolder)}
@@ -262,7 +269,7 @@ const FolderForm = ({ files, onEdit, ...props }: FolderFormProps) => {
                     </Breadcrumbs>
                     <CodeEditor
                         value={selectedFile.content}
-                        disabled={selectedFile.disabled}
+                        disabled={selectedFile.disabled || disabled}
                         language={selectedPath.split(".")[selectedPath.split(".").length - 1]}
                         placeholder="Enter the code of this file"
                         onChange={(evn) => changeFile(evn.target.value)}
