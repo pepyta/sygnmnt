@@ -89,5 +89,10 @@ describe("team creation and management", () => {
         expect(team.id).toBe(teamId);
         expect(team.name).toBe(updatedName);
     });
+
+    test('should not be able to have empty team name', async () => {
+        const membership = await Membership.getByTeamId(user, teamId);
+        expect(() => Team.update("", membership)).toThrow();
+    });
 });
 
