@@ -1,5 +1,8 @@
 name: publish
-on: [release]
+on:
+  release:
+    types: [published]
+
 jobs:
   publish-docker-image:
     runs-on: ubuntu-latest
