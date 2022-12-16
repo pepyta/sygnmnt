@@ -33,6 +33,10 @@ const SubmissionStatusIndicator = ({ submission, ...props }) => {
                     Component: HourglassEmptyRounded,
                     color: theme.palette.secondary.main,
                 },
+                AWAITING_MANUAL_CHECK: {
+                    Component: HourglassEmptyRounded,
+                    color: theme.palette.warning.main,
+                },
             };
 
 

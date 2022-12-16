@@ -39,15 +39,16 @@ model Log {
 
 // A task can be created by an owner or an auxillary
 model Task {
-  id          String              @id @default(uuid())
-  name        String
-  description String
-  language    ProgrammingLanguage
-  submissions Submission[]
-  team        Team                @relation(fields: [teamId], references: [id])
-  files       File[]
-  createdAt   DateTime            @default(now())
-  dueAt       DateTime?
+  id                String              @id @default(uuid())
+  name              String
+  description       String
+  language          ProgrammingLanguage
+  submissions       Submission[]
+  team              Team                @relation(fields: [teamId], references: [id])
+  files             File[]
+  createdAt         DateTime            @default(now())
+  dueAt             DateTime?
+  needsVerification Boolean             @default(false)
 
   teamId String
 
@@ -128,6 +129,7 @@ enum SubmissionStatus {
   WAITING
   BUILDING
   RUNNING
+  AWAITING_MANUAL_CHECK
   FAILED
   PASSED
 }
