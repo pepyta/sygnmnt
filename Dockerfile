@@ -1,6 +1,4 @@
 FROM node:16
-ARG DATABASE_URL
-ARG JWT_SECRET_KEY
 
 WORKDIR /app
 COPY . .
@@ -12,12 +10,6 @@ RUN apt-get install bash -y
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
-
-ENV DATABASE_URL ${DATABASE_URL}
-ENV JWT_SECRET_KEY ${JWT_SECRET_KEY}
-
-RUN echo "JWT_SECRET_KEY=$JWT_SECRET_KEY" >> .env.local
-RUN echo "DATABASE_URL=$DATABASE_URL" >> .env.local
 
 RUN npx prisma generate
 
