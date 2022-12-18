@@ -2,15 +2,13 @@ services:
   website:
     container_name: website
     command: bash ./scripts/wait-for-it.sh database:3306 -s -t 0 -- bash -c "docker pull gcc:4.9 && npx prisma db push && npm run test"
-    build: 
-      context: .
-      args:
-        - JWT_SECRET_KEY=supersecret123
-        - DATABASE_URL=mysql://root:mysql_password@database:3306/sygnmnt
     expose:
       - 3000:3000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - JWT_SECRET_KEY=supersecret123
+      - DATABASE_URL=mysql://root:mysql_password@database:3306/sygnmnt
 
   database:
     container_name: database
