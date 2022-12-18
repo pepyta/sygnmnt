@@ -3,74 +3,121 @@ import Runner, { BuildError, RuntimeError, UnauthorizedError } from "@lib/server
 import fs from "fs/promises";
 import path from 'path';
 
-test('test with a successful submission', async () => {
-    const runner = new Runner([
-        {
-            name: "teacher.c",
-            content: (await fs.readFile(path.join(__dirname, "/data/success.teacher.c"))).toString("utf-8"),
-        },
-        {
-            name: "student.c",
-            content: (await fs.readFile(path.join(__dirname, "/data/success.student.c"))).toString("utf8"),
-        }
-    ], "C");
+describe("Test for C files", () => {
+    test('test with a successful submission', async () => {
+        const runner = new Runner([
+            {
+                name: "teacher.c",
+                content: (await fs.readFile(path.join(__dirname, "/data/c/success.teacher.c"))).toString("utf-8"),
+            },
+            {
+                name: "student.c",
+                content: (await fs.readFile(path.join(__dirname, "/data/c/success.student.c"))).toString("utf8"),
+            }
+        ], "C");
 
-    await runner.build();
+        await runner.build();
 
-    const exitCode = await runner.run();
+        const exitCode = await runner.run();
 
-    expect(exitCode).toBe(0);
+        expect(exitCode).toBe(0);
+    });
+
+    test('test submission with syntax error', async () => {
+        const runner = new Runner([
+            {
+                name: "input.c",
+                content: (await fs.readFile(path.join(__dirname, "/data/c/fail.syntax-error.c"))).toString("utf-8"),
+            },
+        ], "C");
+
+        await expect(runner.build())
+            .rejects
+            .toThrow(new BuildError(1));
+    });
+
+    test('test submission that fails', async () => {
+        const runner = new Runner([
+            {
+                name: "teacher.c",
+                content: (await fs.readFile(path.join(__dirname, "/data/c/fail.teacher.c"))).toString("utf-8"),
+            },
+            {
+                name: "student.c",
+                content: (await fs.readFile(path.join(__dirname, "/data/c/fail.student.c"))).toString("utf8"),
+            }
+        ], "C");
+
+        await runner.build();
+
+        await expect(runner.run())
+            .rejects
+            .toThrow(new RuntimeError(1));
+    });
+
+    test('test submission without file', async () => {
+        const runner = new Runner([], "C");
+
+        await expect(runner.build())
+            .rejects
+            .toThrow(new BuildError(1));
+    });
+
+    test('test submission with custom dockerfile', async () => {
+        const runner = new Runner([
+            {
+                name: "Dockerfile",
+                content: `FROM alpine:18`,
+            }
+        ], "C");
+
+        await expect(runner.build())
+            .rejects
+            .toThrow(Error);
+    });
 });
 
-test('test submission with syntax error', async () => {
-    const runner = new Runner([
-        {
-            name: "input.c",
-            content: (await fs.readFile(path.join(__dirname, "/data/fail.syntax-error.c"))).toString("utf-8"),
-        },
-    ], "C");
+describe("Test for C++ files", () => {
+    test('test with a successful submission', async () => {
+        const runner = new Runner([
+            {
+                name: "success.cpp",
+                content: (await fs.readFile(path.join(__dirname, "/data/cpp/success.cpp"))).toString("utf8"),
+            }
+        ], "CPP");
 
-    await expect(runner.build())
-        .rejects
-        .toThrow(new BuildError(1));
-});
+        await runner.build();
 
-test('test submission that fails', async () => {
-    const runner = new Runner([
-        {
-            name: "teacher.c",
-            content: (await fs.readFile(path.join(__dirname, "/data/fail.teacher.c"))).toString("utf-8"),
-        },
-        {
-            name: "student.c",
-            content: (await fs.readFile(path.join(__dirname, "/data/fail.student.c"))).toString("utf8"),
-        }
-    ], "C");
+        const exitCode = await runner.run();
 
-    await runner.build();
+        expect(exitCode).toBe(0);
+    });
 
-    await expect(runner.run())
-        .rejects
-        .toThrow(new RuntimeError(1));
-});
+    test('test with a failing submission with syntax errors', async () => {
+        const runner = new Runner([
+            {
+                name: "syntax-error.cpp",
+                content: (await fs.readFile(path.join(__dirname, "/data/cpp/syntax-error.cpp"))).toString("utf8"),
+            }
+        ], "CPP");
 
-test('test submission without file', async () => {
-    const runner = new Runner([], "C");
+        expect(runner.build())
+            .rejects
+            .toThrow(new BuildError(1));
+    });
 
-    await expect(runner.build())
-        .rejects
-        .toThrow(new BuildError(1));
-});
+    test('test with a failing submission at runtime', async () => {
+        const runner = new Runner([
+            {
+                name: "fail.cpp",
+                content: (await fs.readFile(path.join(__dirname, "/data/cpp/fail.cpp"))).toString("utf8"),
+            }
+        ], "CPP");
+        
+        await runner.build();
 
-test('test submission with custom dockerfile', async () => {
-    const runner = new Runner([
-        {
-            name: "Dockerfile",
-            content: `FROM alpine:18`,
-        }
-    ], "C");
-
-    await expect(runner.build())
-        .rejects
-        .toThrow(Error);
-});
+        expect(runner.run())
+            .rejects
+            .toThrow(new RuntimeError(1));
+    });
+})

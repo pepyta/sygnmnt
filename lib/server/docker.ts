@@ -18,10 +18,9 @@ CMD ["./final"]`;
     }
 
     public static generateCpp(files: RunnerFile[]) {
-        return `FROM alpine:3.14
-RUN apk add build-base
+        return `FROM gcc:4.9
 ${files.map((file) => `COPY ${file.name} ${file.name}`).join("\n")}
-RUN g++ -o final ${files.map((file) => file.name).join(" ")}
+RUN gcc -lstdc++ -o final ${files.map((file) => file.name).join(" ")}
 CMD ["./final"]`;
     }
 }
