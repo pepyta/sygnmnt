@@ -2,6 +2,8 @@ services:
   website:
     container_name: website
     command: bash ./scripts/wait-for-it.sh database:3306 -s -t 0 -- bash -c "docker pull gcc:4.9 && npx prisma db push && npm run test"
+    build: 
+      context: .
     expose:
       - 3000:3000
     volumes:
