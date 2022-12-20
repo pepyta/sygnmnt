@@ -6,6 +6,9 @@ services:
       - 3000:3000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DATABASE_URL=mysql://root:mysql_password@database:3306/sygnmnt
+      - JWT_SECRET_KEY=CHANGE_THIS_TO_SOMETHING_SECURE
 
   database:
     platform: linux/x86_64
