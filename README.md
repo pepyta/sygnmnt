@@ -6,11 +6,23 @@ The SYGNMNT project is an assignment management website, where the teachers can 
 
 The project is part of the Tools of Software Projects (IP-18KVPRJG) assignment.
 
-## Prerequisites
+## Running the application with Docker compose
+This is the recommended way of running the application for end users as you don't have to set up anything or build from source.
+
+1. Install [Docker](https://docker.com/) on your host machine.
+2. Copy the `docker-compose.yml` file from the repository to your local machine.
+3. Open a terminal in the same folder as your `docker-compose.yml` file.
+4. Replace the `CHANGE_THIS_TO_SOMETHING_SECURE` value in your `docker-compose.yml` to a random-generated string.
+5. Run `docker compose up` or `docker-compose up` (depending on your Docker version).
+6. Open [http://localhost:3000](http://localhost:3000) after the terminal says this: `ready - started server on ...`.
+7. Profit!
+
+## Advanced usage
+### Prerequisites
 - [NodeJS LTS](https://nodejs.org/en/)
 - MySQL Server (e.g: XAMPP)
+- [Docker](https://docker.com/)
 
-## Getting Started
 ### Install dependencies
 You can install the required dependencies by running the following command:
 ```
