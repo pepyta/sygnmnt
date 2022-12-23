@@ -1,5 +1,6 @@
 import { Submission } from "@prisma/client";
 import Runner from "./runner";
+import prisma from "./prisma";
 
 class RunnerManager {
     private static MAX_NUMBER_OF_CONCURENT_RUNS = 5;
