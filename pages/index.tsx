@@ -17,7 +17,7 @@ const HomePage = () => {
 
     if (!user) {
         return (
-            <Container maxWidth={"sm"}>
+            <Container maxWidth={"sm"} sx={{ mt: 4, mb: 4 }}>
                 <Card>
                     <CardContent>
                         <Grid container spacing={2}>
@@ -37,7 +37,7 @@ const HomePage = () => {
     }
 
     return (
-        <Container maxWidth={"sm"}>
+        <Container maxWidth={"sm"} sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Card>
