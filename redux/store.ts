@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { InvitationSlice } from './slices/invitation'
 import { MembershipSlice } from './slices/membership'
+import { TeamInvitationSlice } from './slices/teamInvitation'
 
 const store = configureStore({
   reducer: {
+    teamInvitations: TeamInvitationSlice.reducer,
     invitations: InvitationSlice.reducer,
     membership: MembershipSlice.reducer,
   }
