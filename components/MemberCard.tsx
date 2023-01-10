@@ -9,7 +9,7 @@ export type MemberCardProps = CardProps & {
     team: ExtendedTeamType;
 };
 
-const MemberCard = ({ team, ...props }: MemberCardProps) => {
+const MemberCard = ({ team }: MemberCardProps) => {
     const [isOpen, setOpen] = useState(false);
     const { memberships } = useMemberships();
 
@@ -19,7 +19,7 @@ const MemberCard = ({ team, ...props }: MemberCardProps) => {
     );
     
     return (
-        <Card {...props}>
+        <Card>
             <InviteUserDialog
                 open={isOpen}
                 onClose={() => setOpen(false)}

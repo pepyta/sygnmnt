@@ -38,6 +38,13 @@ const controller = async (req: NextApiRequest) => {
                 message: "User not found with given username!"
             };
         }
+
+        if(user.id === target.id){
+            return {
+                success: false,
+                message: "You cannot invite yourself!"
+            };
+        }
     
         await Invitation.inviteUser(membership.team, target);
 
