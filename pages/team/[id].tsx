@@ -3,7 +3,8 @@ import TaskList from "@components/TaskList";
 import { useUser } from "@components/UserProvider";
 import { useMount } from "@lib/client/useMount";
 import { LoadingButton } from "@mui/lab";
-import { Card, CardContent, Container, Grid, Typography } from "@mui/material";
+import { Button, Card, CardContent, Container, Grid, Typography } from "@mui/material";
+import { ArrowBackRounded as PreviousPageIcon } from "@mui/icons-material";
 import NextLink from "next/link";
 import { useMemo, useState } from "react";
 import MemberCard from "@components/MemberCard";
@@ -94,11 +95,16 @@ const TeamPage = ({ id }: TeamPageProps) => {
     return (
         <Container maxWidth={"sm"} sx={{ pt: 2, pb: 2}}>
             <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <Typography variant={"h5"}>
+                <Grid item xs={3} sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Button onClick={() => router.back()} startIcon={<PreviousPageIcon />}>
+                        Go back
+                    </Button>
+                </Grid>
+                <Grid item xs={6}>
+                    <Typography align="center" variant={"h5"}>
                         {membership.team.name}
                     </Typography>
-                    <Typography>
+                    <Typography align="center" >
                         {`Role: ${membership.role}`}
                     </Typography>
                 </Grid>
