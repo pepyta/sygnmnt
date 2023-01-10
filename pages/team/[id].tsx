@@ -8,6 +8,7 @@ import { ArrowBackRounded as PreviousPageIcon } from "@mui/icons-material";
 import NextLink from "next/link";
 import { useMemo, useState } from "react";
 import MemberCard from "@components/MemberCard";
+import TeamInvitationCard from "@components/TeamInvitationCard";
 import Membership from "@lib/client/membership";
 import { TeamNotFoundError } from "@lib/server/errors";
 import { useMemberships } from "@redux/slices/membership";
@@ -115,6 +116,11 @@ const TeamPage = ({ id }: TeamPageProps) => {
                 </Grid>
                 <Grid item xs={12}>
                     <MemberCard
+                        team={membership.team}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TeamInvitationCard
                         team={membership.team}
                     />
                 </Grid>
