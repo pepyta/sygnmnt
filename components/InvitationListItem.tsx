@@ -50,7 +50,6 @@ const InvitationListItem = ({ invitation, ...props }: InvitationListItemProps) =
             setLoading(false);
         }
     };
-    
     return (
         <ListItem {...props}>
             <ListItemText
