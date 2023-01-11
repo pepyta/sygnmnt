@@ -31,11 +31,17 @@ export default class Invitation {
                 user: true,
             },
         });
+        const ret: TeamInvitationType[] = [];
         for(let invitation of invitations){
-            invitation.username = invitation.user.username;
-            delete invitation.user;
+            const tit: TeamInvitationType = {
+                userId: invitation.userId,
+                teamId: invitation.teamId,
+                createdAt: invitation.createdAt,
+                username: invitation.user.username,
+            };
+            ret.push(tit);
         }
-        return invitations;
+        return ret;
     }
     /**
      * Gets all of the invitations for a given user to a team.

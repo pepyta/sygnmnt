@@ -1,6 +1,7 @@
 import { Authentication } from "@lib/server/auth";
 import { ForbiddenError, TeamNotFoundError, UnauthorizedError, UnsupportedMethodError } from "@lib/server/errors";
 import Invitation from "@lib/server/invitation";
+import TeamInvitationType from "@lib/server/invitation";
 import Membership from "@lib/server/membership";
 import { middleware } from "@lib/server/middleware";
 import prisma from "@lib/server/prisma";

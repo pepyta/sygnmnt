@@ -5,7 +5,7 @@ import { useSnackbar } from "notistack";
 import { useMemo, useState } from "react";
 
 export type TeamInvitationListItemProps = ListItemProps & {
-    invitation: InvitationType;
+    teamInvitation: TeamInvitationType;
 };
 
 const TeamInvitationListItem = ({ teamInvitation, ...props }: TeamInvitationListItemProps) => {

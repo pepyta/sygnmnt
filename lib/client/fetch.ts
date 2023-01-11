@@ -11,7 +11,7 @@ export default class RootApiHandler {
         return data;
     }
 
-    private static async getResponse(input: RequestInfo | URL, init?: RequestInit) {
+    public static async getResponse(input: RequestInfo | URL, init?: RequestInit) {
         try {
             return await fetch(input, init);
         } catch {

@@ -33,7 +33,7 @@ const TeamInvitationList = ({ team, ...props }: TeamInvitationListProps) => {
         return (
             <List {...props}>
                 <Typography sx={{ p: 2 }}>
-                    An error occured while loading the team's invitations: {error.message}
+                    An error occured while loading the team&apos;s invitations: {error.message}
                 </Typography>
                 <Button variant={"outlined"}>
                     Retry

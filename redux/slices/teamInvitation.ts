@@ -2,7 +2,7 @@ import { TeamInvitationType } from "@lib/client/invitation";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { useAppSelector } from "redux/hooks";
 
-type InvitationSliceType = {
+type TeamInvitationSliceType = {
     teamInvitations: TeamInvitationType[];
     isLoading: boolean;
 };
@@ -23,7 +23,7 @@ export const TeamInvitationSlice = createSlice({
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload;
         },
-        setTeamInvitations: (state, action: PayloadAction<InvitationType[]>) => {
+        setTeamInvitations: (state, action: PayloadAction<TeamInvitationType[]>) => {
             state.teamInvitations = action.payload;
         }
     }
