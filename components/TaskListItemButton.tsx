@@ -22,13 +22,15 @@ const TaskListItemButton = ({ task, ...props }: TaskListItemButtonProps) => {
                 {membership.role === "MEMBER" && (
                     <ListItemAvatar>
                         <SubmissionStatusIndicator
+                            dueDate={task.dueDate}
+                            hardDeadline={task.hardDeadline}
                             submission={task.submissions.length === 0 ? null : task.submissions[0]}
                         />
                     </ListItemAvatar>
                 )}
                 <ListItemText
                     primary={`${task.name}`}
-                    secondary={`Created at: ${new Date(task.createdAt).toLocaleDateString()}${task.dueAt ? `, due at: ${new Date(task.dueAt).toLocaleDateString()}` : ""}`}
+                    secondary={`Created at: ${new Date(task.createdAt).toLocaleDateString()}${task.dueDate && task.hardDeadline ? `, due at: ${new Date(task.dueDate).toLocaleDateString()} ${new Date(task.dueDate).toLocaleTimeString()}` : ""}`}
                 />
             </ListItemButton>
             <TaskDetailsDialog

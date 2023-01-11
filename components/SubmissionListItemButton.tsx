@@ -6,10 +6,12 @@ import SubmissionDetailsDialog from "./SubmissionDetailsDialog";
 import SubmissionStatusIndicator from "./SubmissionStatusIndicator";
 
 export type SubmissionListItemButtonProps = ListItemButtonProps & {
+    dueDate: Date;
+    hardDeadline: boolean;
     submission: ExtendedSubmissionType;
 };
 
-const SubmissionListItemButton = ({ submission, ...props }: SubmissionListItemButtonProps) => {
+const SubmissionListItemButton = ({ dueDate, hardDeadline, submission, ...props }: SubmissionListItemButtonProps) => {
     const [isOpen, setOpen] = useState(false);
     const theme = useTheme();
 
@@ -26,6 +28,8 @@ const SubmissionListItemButton = ({ submission, ...props }: SubmissionListItemBu
             <ListItemButton onClick={() => setOpen(true)} {...props}>
                 <ListItemAvatar>
                     <SubmissionStatusIndicator
+                        dueDate={dueDate}
+                        hardDeadline={hardDeadline}
                         submission={submission}
                     />
                 </ListItemAvatar>
@@ -34,6 +38,8 @@ const SubmissionListItemButton = ({ submission, ...props }: SubmissionListItemBu
                 />
             </ListItemButton>
             <SubmissionDetailsDialog
+                dueDate={dueDate}
+                hardDeadline={hardDeadline}
                 submission={submission}
                 open={isOpen}
                 onClose={() => setOpen(false)}

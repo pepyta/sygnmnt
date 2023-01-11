@@ -10,12 +10,14 @@ import Submission from "@lib/client/submission";
 import { useSnackbar } from "notistack";
 
 export type SubmissionDetailsDialogProps = DialogProps & {
+    dueDate: Date;
+    hardDeadline: boolean;
     submission: ExtendedSubmissionType;
 };
 
 type TabType = "LOGS" | "FILES" | "OPTIONS";
 
-const SubmissionDetailsDialog = ({ submission, ...props }: SubmissionDetailsDialogProps) => {
+const SubmissionDetailsDialog = ({ dueDate, hardDeadline, submission, ...props }: SubmissionDetailsDialogProps) => {
     const [tab, setTab] = useState<TabType>("LOGS");
     const [status, setStatus] = useState<Prisma.SubmissionStatus>(submission.status);
     const [loading, setLoading] = useState<"EDIT" | "DELETE">();
@@ -26,6 +28,8 @@ const SubmissionDetailsDialog = ({ submission, ...props }: SubmissionDetailsDial
     );
 
     const { enqueueSnackbar } = useSnackbar();
+    const due = new Date(dueDate);
+    const now = new Date();
 
     const date = useMemo(
         () => {
@@ -56,9 +60,9 @@ const SubmissionDetailsDialog = ({ submission, ...props }: SubmissionDetailsDial
         try {
             setLoading("DELETE");
 
-            const { message } = await Submission.delete(submission.id);
+            const { message, success } = await Submission.delete(submission.id);
             enqueueSnackbar(message, {
-                variant: "success",
+                variant: success ? "success" : "error",
             });
 
             setLoading(null);
@@ -113,9 +117,9 @@ const SubmissionDetailsDialog = ({ submission, ...props }: SubmissionDetailsDial
                                 onClick={handleDelete}
                                 loading={loading === "DELETE"}
                                 variant={"contained"}
-                                disabled={!!loading}
+                                disabled={!!loading || (hardDeadline && due < now && !(membership.role === "OWNER" || membership.role === "AUXILIARY"))}
                             >
-                                Delete submission
+                                {(hardDeadline && due < now && !(membership.role === "OWNER" || membership.role === "AUXILIARY") ? "Past deadline" : "Delete submission")}
                             </LoadingButton>
                         </Grid>
                     </Grid>
