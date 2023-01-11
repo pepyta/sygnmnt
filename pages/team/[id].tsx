@@ -119,11 +119,13 @@ const TeamPage = ({ id }: TeamPageProps) => {
                         team={membership.team}
                     />
                 </Grid>
-                <Grid item xs={12}>
-                    <TeamInvitationCard
-                        team={membership.team}
-                    />
-                </Grid>
+                {membership.role !== "MEMBER" && (
+                    <Grid item xs={12}>
+                        <TeamInvitationCard
+                            team={membership.team}
+                        />
+                    </Grid>
+                )}
             </Grid>
         </Container>
     );
