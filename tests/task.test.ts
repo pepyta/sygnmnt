@@ -29,7 +29,7 @@ describe("task creation and management", () => {
     });
 
     test('should create a new task', async () => {
-        await Task.create(team, name, description, language, []);
+        await Task.create(team, name, new Date(), false, description, language, []);
     });
 
     test('should have the task created', async () => {
