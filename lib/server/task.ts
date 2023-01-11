@@ -11,7 +11,7 @@ export default class Task {
      * @param language The language of the task.
      * @returns A task that has been created.
      */
-    public static async create(team: Prisma.Team, name: string, description: string, language: Prisma.ProgrammingLanguage, files: RunnerFile[]) {
+    public static async create(team: Prisma.Team, name: string, dueDate: Date, hardDeadline: boolean, description: string, language: Prisma.ProgrammingLanguage, files: RunnerFile[]) {
         return await prisma.task.create({
             data: {
                 team: {
@@ -21,6 +21,8 @@ export default class Task {
                 },
                 language,
                 name,
+                dueDate,
+                hardDeadline,
                 description,
                 files: {
                     createMany: {

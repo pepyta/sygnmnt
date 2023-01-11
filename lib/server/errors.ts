@@ -4,6 +4,12 @@ export class UnauthorizedError extends Error {
     }
 }
 
+export class PastDeadlineError extends Error {
+    constructor() {
+        super("You are not allowed to submit solutions after the deadline!");
+    }
+}
+
 export class ForbiddenError extends Error {
     constructor() {
         super("You don't have permission for this!");
