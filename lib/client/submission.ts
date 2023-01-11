@@ -57,7 +57,7 @@ export default class Submission {
         return response;
     }
 
-    public static async delete(submissionId: string): Promise<{ message: string; submission: Prisma.Submission }> {
+    public static async delete(submissionId: string): Promise<{ message: string; success: boolean; submission: Prisma.Submission }> {
         const memberships = await Membership.getAll();
         const membership = memberships.find((membership) => membership.team.tasks.some((task) => task.submissions.some((submission) => submission.id === submissionId)));
         const task = membership.team.tasks.find((task) => task.submissions.some((submission) => submission.id === submissionId));

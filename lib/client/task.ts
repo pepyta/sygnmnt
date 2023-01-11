@@ -5,7 +5,7 @@ import { RunnerFile } from "@lib/server/runner";
 import Membership from "./membership";
 
 export default class Task {
-    public static async create(teamId: string, name: string, description: string, language: Prisma.ProgrammingLanguage, files: RunnerFile[]): Promise<{
+    public static async create(teamId: string, name: string, dueDate: number, hardDeadline: boolean, description: string, language: Prisma.ProgrammingLanguage, files: RunnerFile[]): Promise<{
         message: string;
         task: Prisma.Task;
     }> {
@@ -13,6 +13,8 @@ export default class Task {
             method: "POST",
             body: JSON.stringify({
                 name,
+                dueDate,
+                hardDeadline,
                 description,
                 language,
                 files: files.map((file) => ({
