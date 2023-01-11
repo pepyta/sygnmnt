@@ -40,6 +40,7 @@ const deleteSubmission = async (req: NextApiRequest) => {
 
     // get the team that we want to create the task for
     const teamId = req.query.teamId as string;
+    const taskId = req.query.taskId as string;
     const submissionId = req.query.submissionId as string;
     const submission = await Submission.findById(submissionId);
     const membership = await Membership.getByTeamId(user, teamId);
@@ -49,10 +50,24 @@ const deleteSubmission = async (req: NextApiRequest) => {
         throw new ForbiddenError();
     }
 
+    if(membership.role !== "OWNER" && membership.role !== "AUXILIARY"){
+        const task = await Task.getById(taskId);
+        const due = new Date(task.dueDate);
+        const now = new Date();
+        
+        if(task.hardDeadline && due < now){
+            return {
+                success: false,
+                message: "You are not allowed to delete submissions after deadline!",
+            };
+        }
+    }
+
     // verify parameters
     await Submission.delete(submission);
 
     return {
+        success: true,
         message: "Submission successfully deleted!",
         submission,
     };
