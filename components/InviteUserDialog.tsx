@@ -23,12 +23,12 @@ const InviteUserDialog = ({ team, ...props }: InviteUserDialogProps) => {
         try {
             setLoading(true);
 
-            await Invitation.inviteUser(team.id, username);
+            const response = await Invitation.inviteUser(team.id, username);
 
             props.onClose({}, "backdropClick");
             setUsername("");
-            enqueueSnackbar("Invitation successfully sent!", {
-                variant: "success",
+            enqueueSnackbar(response.message, {
+                variant: response.success ? "success" : "error",
             });
         } catch (e) {
             enqueueSnackbar(e.message, {

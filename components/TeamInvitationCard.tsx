@@ -3,13 +3,13 @@ import { Box } from "@mui/system";
 import { ExtendedTeamType, useMemberships } from "@redux/slices/membership";
 import { useMemo, useState } from "react";
 import InviteUserDialog from "./InviteUserDialog";
-import MemberList from "./MemberList";
+import TeamInvitationList from "./TeamInvitationList";
 
-export type MemberCardProps = CardProps & {
+export type TeamInvitationCardProps = CardProps & {
     team: ExtendedTeamType;
 };
 
-const MemberCard = ({ team }: MemberCardProps) => {
+const TeamInvitationCard = ({ team }: TeamInvitationCardProps) => {
     const [isOpen, setOpen] = useState(false);
     const { memberships } = useMemberships();
 
@@ -20,32 +20,20 @@ const MemberCard = ({ team }: MemberCardProps) => {
     
     return (
         <Card>
-            <InviteUserDialog
-                open={isOpen}
-                onClose={() => setOpen(false)}
-                team={team}
-            />
             <Box sx={{ pt: 2, pr: 2, pl: 2 }}>
                 <Grid container alignItems={"center"} spacing={1}>
                     <Grid item>
                         <Typography variant={"h6"}>
-                            Members
+                            Pending team invitations
                         </Typography>
                     </Grid>
-                    {role !== "MEMBER" && (
-                        <Grid item sx={{ flexGrow: 1, textAlign: "right" }}>
-                            <Button onClick={() => setOpen(true)} variant={"outlined"}>
-                                Invite new member
-                            </Button>
-                        </Grid>
-                    )}
                 </Grid>
             </Box>
-            <MemberList
+            <TeamInvitationList
                 team={team}
             />
         </Card>
     );  
 };
 
-export default MemberCard;
+export default TeamInvitationCard;

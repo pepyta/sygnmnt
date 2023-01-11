@@ -29,11 +29,27 @@ const controller = async (req: NextApiRequest) => {
         });
 
         // don't throw error when no user is found with a given name as that would be a potential security risk
-        if(!target) return;
+        // but as the "Unexpected end of JSON input" client-side exception would only occur when this is the case and
+        // login also tells it with "User not found with given username" (instead of "Password mismatch") and
+        // because this makes it harder to gather together in the team, it would be pretty useful to do so
+        if(!target) {
+            return {
+                success: false,
+                message: "User not found with given username!"
+            };
+        }
+
+        if(user.id === target.id){
+            return {
+                success: false,
+                message: "You cannot invite yourself!"
+            };
+        }
     
         await Invitation.inviteUser(membership.team, target);
 
         return {
+            success: true,
             message: "Invitation successfully sent!",
         };
     } else {

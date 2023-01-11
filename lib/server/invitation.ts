@@ -1,9 +1,48 @@
-import { InvitationType } from "@lib/client/invitation";
+import { InvitationType, TeamInvitationType } from "@lib/client/invitation";
 import Prisma from "@prisma/client";
 import { AlreadyMemberError, InvitationNotFoundError } from "./errors";
 import prisma from "./prisma";
 
 export default class Invitation {
+     /**
+     * Revokes an invitation of a team
+     * @param team The team where the invitation will be revoked from.
+     * @param user The user who's invitation will be revoked.
+     */
+    public static async revoke(team: Prisma.Team, user: Prisma.User) {
+        const pendingInvitation = await this.findPendingInvitation(user, team);
+        if(!pendingInvitation) {
+            throw new InvitationNotFoundError();
+        }
+
+        await Invitation.deleteInvitation(pendingInvitation);
+    }
+     /**
+     * Gets all of the invitations for a team.
+     * @param user The user that wants to list the invitations.
+     * @param team The team who's invitations are to be listed.
+     */
+    public static async getTeamAll(team: Prisma.Team): Promise<TeamInvitationType[]> {
+        const invitations = await prisma.invitation.findMany({
+            where: {
+                teamId: team.id,
+            },
+            include: {
+                user: true,
+            },
+        });
+        const ret: TeamInvitationType[] = [];
+        for(let invitation of invitations){
+            const tit: TeamInvitationType = {
+                userId: invitation.userId,
+                teamId: invitation.teamId,
+                createdAt: invitation.createdAt,
+                username: invitation.user.username,
+            };
+            ret.push(tit);
+        }
+        return ret;
+    }
     /**
      * Gets all of the invitations for a given user to a team.
      * @param user The user that wants to get the invitations.
