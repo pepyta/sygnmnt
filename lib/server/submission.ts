@@ -1,4 +1,5 @@
 import * as Prisma from "@prisma/client";
+import { PastDeadlineError } from "@lib/server/errors";
 import { RunnerFile } from "./runner";
 import Task from "./task";
 import prisma from "./prisma";
@@ -6,6 +7,13 @@ import prisma from "./prisma";
 export default class Submission {
     public static async create(user: Prisma.User, task: Prisma.Task, files: RunnerFile[]) {
         const { files: teacherFiles } = await Task.getById(task.id); 
+        const due = new Date(task.dueDate);
+        const now = new Date();
+
+        if(task.hardDeadline && due < now){
+            throw new PastDeadlineError();
+        }
+
         return await prisma.submission.create({
             data: {
                 task: {

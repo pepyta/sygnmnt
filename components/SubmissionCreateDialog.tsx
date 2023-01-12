@@ -17,6 +17,9 @@ const SubmissionCreateDialog = ({ task, ...props }: SubmissionCreateDialogProps)
     const [files, setFiles] = useState<RunnerFile[]>([]);
 
     const { enqueueSnackbar } = useSnackbar();
+    
+    const due = new Date(task.dueDate);
+    const now = new Date();
 
     const submit = async () => {
         try {
@@ -59,8 +62,8 @@ const SubmissionCreateDialog = ({ task, ...props }: SubmissionCreateDialogProps)
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <LoadingButton onClick={submit} loading={isLoading} disabled={files.length === 0} variant={"contained"} sx={{ ml: "auto" }}>
-                            Submit
+                        <LoadingButton onClick={submit} loading={isLoading} disabled={files.length === 0 || (task.hardDeadline && due < now)} variant={"contained"} sx={{ ml: "auto" }}>
+                            {task.hardDeadline && due < now ? "Past deadline" : "Submit"}
                         </LoadingButton>
                     </Grid>
                 </Grid>

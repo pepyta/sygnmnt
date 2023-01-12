@@ -1,13 +1,15 @@
-import { DoneRounded, CloseRounded, BuildRounded, PlayArrowRounded, HourglassEmptyRounded, QuestionMarkRounded } from "@mui/icons-material";
+import { Warning, LockClock, DoneRounded, CloseRounded, BuildRounded, PlayArrowRounded, HourglassEmptyRounded, QuestionMarkRounded } from "@mui/icons-material";
 import { Avatar, AvatarProps, useTheme } from "@mui/material";
 import { ExtendedSubmissionType } from "@redux/slices/membership";
 import { useMemo } from "react";
 
 export type SubmissionStatusIndicatorProps = AvatarProps & {
+    dueDate: Date;
+    hardDeadline: boolean;
     submission: ExtendedSubmissionType;
 };
 
-const SubmissionStatusIndicator = ({ submission, ...props }) => {
+const SubmissionStatusIndicator = ({ dueDate, hardDeadline, submission, ...props }) => {
     const theme = useTheme();
 
     const { Component, color } = useMemo(
@@ -44,6 +46,23 @@ const SubmissionStatusIndicator = ({ submission, ...props }) => {
                 return map[submission.status];
             }
 
+            const due = new Date(dueDate);
+            const now = new Date();
+
+            if(hardDeadline){
+                if(due < now){
+                    return {
+                        Component: LockClock,
+                        color: theme.palette.error.main,
+                    };
+                } else if(now.valueOf() - due.valueOf() < 24 * 3600000) {
+                    return {
+                        Component: Warning,
+                        color: theme.palette.warning.main,
+                    };
+                }
+            }
+            
             return {
                 Component: QuestionMarkRounded,
                 color: theme.palette.secondary.main,

@@ -28,6 +28,9 @@ const TaskDetailsDialog = ({ task, ...props }: TaskDetailsDialogProps) => {
 
     const openDeleteDialog = () => setDeleteOpen(true);
 
+    const due = new Date(task.dueDate);
+    const now = new Date();
+
     return (
         <>
             <SubmissionCreateDialog
@@ -74,13 +77,15 @@ const TaskDetailsDialog = ({ task, ...props }: TaskDetailsDialogProps) => {
                             <Grid container>
                                 <Grid item xs={12}>
                                     <Box sx={{ m: 2 }}>
-                                        <Button fullWidth variant="contained" onClick={() => setCreateOpen(true)}>
-                                            Submit solution
+                                        <Button fullWidth disabled={task.hardDeadline && due < now} variant="contained" onClick={() => setCreateOpen(true)}>
+                                            {task.hardDeadline && due < now ? "Past deadline" : "Submit solution"}
                                         </Button>
                                     </Box>
                                 </Grid>
                                 <Grid item xs={12}>
                                     <SubmissionList
+                                        dueDate={task.dueDate}
+                                        hardDeadline={task.hardDeadline}
                                         submissions={task.submissions}
                                     />
                                 </Grid>
@@ -90,6 +95,8 @@ const TaskDetailsDialog = ({ task, ...props }: TaskDetailsDialogProps) => {
                                 .filter((membership) => membership.role === "MEMBER")
                                 .map((membership) => (
                                     <SubmissionList
+                                        dueDate={task.dueDate}
+                                        hardDeadline={task.hardDeadline}
                                         subheader={(
                                             <ListSubheader>
                                                 {membership.user.username}

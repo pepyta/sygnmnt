@@ -45,7 +45,8 @@ model Task {
   team              Team                @relation(fields: [teamId], references: [id])
   files             File[]
   createdAt         DateTime            @default(now())
-  dueAt             DateTime?
+  dueDate           DateTime
+  hardDeadline      Boolean
   needsVerification Boolean             @default(false)
 
   teamId String
