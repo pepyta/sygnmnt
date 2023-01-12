@@ -1,5 +1,5 @@
 import { Authentication } from "@lib/server/auth";
-import { ForbiddenError, UnsupportedMethodError, PastDeadlineError } from "@lib/server/errors";
+import { ForbiddenError, UnsupportedMethodError } from "@lib/server/errors";
 import manager from "@lib/server/manager";
 import Membership from "@lib/server/membership";
 import { middleware } from "@lib/server/middleware";
@@ -25,14 +25,6 @@ const createSubmission = async (req: NextApiRequest) => {
     const { files } = JSON.parse(req.body);
     if(!files || files.length === 0) throw new Error("You must send files to submission!");
     const task = await Task.getById(taskId);
-
-    const due = new Date(task.dueDate);
-    const now = new Date();
-    
-    
-    if(task.hardDeadline && due < now){
-        throw new PastDeadlineError();
-    }
 
     const submission = await Submission.create(user, task, files);
     manager.enqueue(submission);
